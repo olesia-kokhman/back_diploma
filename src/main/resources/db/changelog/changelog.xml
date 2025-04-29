@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+
+    <changeSet id="1-create-enums" author="olesia">
+        <sql>
+            CREATE TYPE transaction_type_enum AS ENUM ('EXPENSE', 'INCOME', 'TRANSFER');
+            CREATE TYPE currency_enum AS ENUM ('UAH', 'EURO', 'USD');
+            CREATE TYPE account_type_enum AS ENUM ('BANK_ACCOUNT', 'CASH', 'DEBT', 'REAL_ESTATE', 'TRANSPORT', 'CREDIT');
+        </sql>
+    </changeSet>
+
+    <changeSet id="2-create-tables" author="olesia">
+        <createTable tableName="transactions">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            
+            <column name="transaction_type" type="transaction_type_enum">
+                <constraints nullable="false"/>
+            </column>
+            
+            <column name="amount" type="double">
+                <constraints nullable="false"/>
+            </column>
+            
+            <column name="currency" type="currency_enum">
+                <constraints nullable="false"/>
+            </column>
+            
+            <column name="description" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            
+            <column name="date_and_time" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            
+            <column name="account_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+        <createTable tableName="accounts">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="account_type" type="account_type_enum">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="currency" type="currency_enum">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="balance" type="double">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="is_main" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="categories">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3-create-transaction-category-table" author="olesia">
+        <createTable tableName="transaction_category">
+            <column name="transaction_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="category_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="transaction_category"
+                baseColumnNames="transaction_id"
+                referencedTableName="transactions"
+                referencedColumnNames="id"
+                constraintName="fk_transaction_id"/>
+
+        <addForeignKeyConstraint
+                baseTableName="transaction_category"
+                baseColumnNames="category_id"
+                referencedTableName="categories"
+                referencedColumnNames="id"
+                constraintName="fk_category_id"/>
+    </changeSet>
+
+</databaseChangeLog>
