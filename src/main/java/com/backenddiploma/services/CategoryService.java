@@ -2,6 +2,7 @@ package com.backenddiploma.services;
 
 import com.backenddiploma.models.Category;
 import com.backenddiploma.repositories.CategoryRepository;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
@@ -41,6 +42,10 @@ public class CategoryService {
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    public boolean existsByName(String name) {
+        return categoryRepository.existsByName(name);
     }
 
 }

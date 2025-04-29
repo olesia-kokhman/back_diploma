@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "transactions")
+@Table(name = "transactions", schema = "public")
 @Getter
 @Setter
 public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "transaction_type")
     @Enumerated(EnumType.STRING)
