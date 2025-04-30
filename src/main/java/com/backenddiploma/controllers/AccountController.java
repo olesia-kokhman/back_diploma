@@ -1,9 +1,7 @@
 package com.backenddiploma.controllers;
 
-
 import com.backenddiploma.models.Account;
 import com.backenddiploma.services.AccountService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/api/accounts")
 public class AccountController {
 

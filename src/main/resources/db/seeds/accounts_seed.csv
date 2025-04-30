@@ -1,0 +1,11 @@
+id,name,account_type,currency,balance,is_main
+1,John's Checking,BANK_ACCOUNT,USD,1500,true
+2,Jane's Savings,BANK_ACCOUNT,EUR,5000,false
+3,Main Cash,CASH,USD,200,true
+4,Travel Fund,SAVINGS,USD,1200,false
+5,Personal Account,BANK_ACCOUNT,UAH,3000,true
+6,Corporate Account,BANK_ACCOUNT,EUR,10000,false
+7,John's Credit,CREDIT,USD,-500,false
+8,Home Fund,SAVINGS,USD,4000,true
+9,Investment Account,INVESTMENT,USD,15000,false
+10,Emergency Fund,SAVINGS,USD,2500,true

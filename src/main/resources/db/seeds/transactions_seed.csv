@@ -1,0 +1,51 @@
+id,transaction_type,amount,currency,description,date_and_time,account_id
+1,EXPENSE,200,USD,Groceries purchase,2025-04-01 08:30:00,1
+2,INCOME,1500,USD,Salary payment,2025-04-01 09:00:00,5
+3,TRANSFER,500,USD,Transfer from savings to checking,2025-04-02 10:30:00,1
+4,EXPENSE,150,EUR,Transport fare,2025-04-02 11:00:00,2
+5,EXPENSE,100,USD,Health insurance,2025-04-03 13:00:00,1
+6,INCOME,2000,USD,Freelance income,2025-04-03 14:30:00,1
+7,TRANSFER,300,USD,Transfer to savings,2025-04-04 15:00:00,2
+8,EXPENSE,80,UAH,Groceries,2025-04-04 16:00:00,5
+9,INCOME,1000,USD,Tax refund,2025-04-05 09:30:00,5
+10,TRANSFER,400,USD,Transfer from checking to personal account,2025-04-05 10:00:00,3
+11,EXPENSE,120,USD,Entertainment,2025-04-06 11:15:00,3
+12,INCOME,2000,USD,Contract payment,2025-04-06 13:00:00,6
+13,EXPENSE,500,USD,Loan payment,2025-04-07 14:00:00,7
+14,INCOME,1000,USD,Gift from family,2025-04-07 15:30:00,8
+15,TRANSFER,600,USD,Transfer to debt repayment account,2025-04-08 09:00:00,7
+16,EXPENSE,50,USD,Food delivery,2025-04-08 10:15:00,3
+17,INCOME,3000,USD,Sale of assets,2025-04-09 13:30:00,5
+18,EXPENSE,90,USD,Utilities,2025-04-09 14:00:00,5
+19,TRANSFER,250,USD,Transfer from business account,2025-04-10 08:30:00,6
+20,EXPENSE,60,USD,Shopping,2025-04-10 09:30:00,1
+21,INCOME,500,USD,Monthly rental income,2025-04-11 12:30:00,9
+22,EXPENSE,200,USD,Debt payment,2025-04-11 13:00:00,1
+23,TRANSFER,150,USD,Transfer to investment account,2025-04-12 14:30:00,9
+24,INCOME,1500,USD,Consulting project,2025-04-12 15:00:00,2
+25,EXPENSE,300,USD,Insurance payment,2025-04-13 10:00:00,7
+26,INCOME,1000,USD,Side business income,2025-04-13 11:30:00,1
+27,EXPENSE,70,USD,Subscriptions,2025-04-14 13:15:00,8
+28,INCOME,2500,USD,Gift for investment,2025-04-14 14:00:00,2
+29,TRANSFER,350,USD,Transfer to joint account,2025-04-15 09:00:00,5
+30,EXPENSE,130,USD,Travel expenses,2025-04-15 10:30:00,8
+31,INCOME,800,USD,Bonus payment,2025-04-16 12:00:00,10
+32,TRANSFER,400,USD,Transfer to emergency savings,2025-04-16 13:00:00,9
+33,EXPENSE,150,USD,Entertainment,2025-04-17 14:30:00,6
+34,INCOME,1800,USD,Salary increase,2025-04-17 15:30:00,1
+35,EXPENSE,220,USD,Groceries,2025-04-18 10:00:00,3
+36,TRANSFER,500,USD,Transfer to wife’s account,2025-04-18 11:00:00,2
+37,INCOME,1200,USD,Dividends,2025-04-19 09:30:00,5
+38,EXPENSE,150,USD,Subscription for magazine,2025-04-19 10:00:00,7
+39,INCOME,2000,USD,Annual bonus,2025-04-20 13:00:00,6
+40,TRANSFER,200,USD,Transfer to business account,2025-04-20 14:00:00,2
+41,EXPENSE,180,USD,Utilities payment,2025-04-21 09:30:00,3
+42,INCOME,800,USD,Tax refund,2025-04-21 11:00:00,4
+43,EXPENSE,400,USD,Home improvement,2025-04-22 10:15:00,5
+44,TRANSFER,300,USD,Transfer to retirement account,2025-04-22 12:00:00,6
+45,EXPENSE,500,USD,Insurance payment,2025-04-23 13:00:00,7
+46,INCOME,1200,USD,Monthly rent,2025-04-23 14:30:00,9
+47,EXPENSE,60,USD,Entertainment,2025-04-24 09:00:00,10
+48,TRANSFER,500,USD,Transfer to daughter,2025-04-24 11:00:00,6
+49,INCOME,2500,USD,Consulting services,2025-04-25 12:30:00,1
+50,EXPENSE,80,USD,Groceries,2025-04-25 13:00:00,2

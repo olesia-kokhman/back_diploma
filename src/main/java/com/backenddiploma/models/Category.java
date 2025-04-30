@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "categories", schema = "public")
+@Table(name = "categories")
 @Getter
 @Setter
 public class Category {
@@ -25,8 +25,4 @@ public class Category {
             joinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "transaction_id", referencedColumnName = "id") )
     private List<Transaction> transactions = new ArrayList<>();
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

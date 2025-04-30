@@ -108,4 +108,42 @@
                 constraintName="fk_category_id"/>
     </changeSet>
 
+    <changeSet id="4-load-seeds" author="olesia">
+        <loadData tableName="categories"
+                  file="classpath:db/seeds/categories_seed.csv"
+                  separator=",">
+            <column name="id" type="bigint" />
+            <column name="name" type="varchar(255)"/>
+        </loadData>
+
+        <loadData tableName="accounts"
+                  file="classpath:db/seeds/accounts_seed.csv"
+                  separator=",">
+            <column name="id" type="bigint" />
+            <column name="name" type="varchar(255)"/>
+            <column name="account_type" type="account_type_enum"/>
+            <column name="currency" type="currency_enum"/>
+            <column name="balance" type="double"/>
+            <column name="is_main" type="boolean"/>
+        </loadData>
+
+        <loadData tableName="transactions"
+                  file="classpath:db/seeds/transactions_seed.csv"
+                  separator=",">
+            <column name="id" type="bigint" />
+            <column name="transaction_type" type="transaction_type_enum"/>
+            <column name="amount" type="double"/>
+            <column name="currency" type="currency_enum"/>
+            <column name="description" type="varchar(255)"/>
+            <column name="date_and_time" type="timestamp"/>
+            <column name="account_id" type="bigint"/>
+        </loadData>
+
+        <loadData tableName="transaction_category"
+                  file="classpath:db/seeds/transaction_category_seed.csv"
+                  separator=",">
+            <column name="transaction_id" type="bigint" />
+            <column name="category_id" type="bigint" />
+        </loadData>
+    </changeSet>
 </databaseChangeLog>

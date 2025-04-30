@@ -3,7 +3,6 @@ package com.backenddiploma.controllers;
 
 import com.backenddiploma.models.Transaction;
 import com.backenddiploma.services.TransactionService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/api/transactions")
 public class TransactionController {
 
