@@ -1,6 +1,5 @@
 package com.backenddiploma.controllers;
 
-
 import com.backenddiploma.models.Transaction;
 import com.backenddiploma.services.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -61,5 +60,16 @@ public class TransactionController {
         } catch (IllegalArgumentException exception) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/sorted")
+    public ResponseEntity<List<Transaction>> getSortedTransactions(@RequestParam(defaultValue = "date") String sortBy,
+                                                                   @RequestParam(defaultValue = "true") boolean direction) {
+        List<Transaction> transactions = transactionService.getSortedTransactions(sortBy, direction);
+
+        if (transactions.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(transactions);
     }
 }

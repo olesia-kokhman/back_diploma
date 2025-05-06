@@ -1,8 +1,10 @@
 package com.backenddiploma.services;
 
+import com.backenddiploma.logic.TransactionSort;
 import com.backenddiploma.models.Transaction;
 import com.backenddiploma.repositories.TransactionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,5 +44,11 @@ public class TransactionService {
             throw new IllegalArgumentException();
         }
     }
+
+    public List<Transaction> getSortedTransactions(String sortBy, boolean direction) {
+        Specification<Transaction> sortSpec = TransactionSort.getSortedTransactions(sortBy, direction);
+        return transactionRepository.findAll(sortSpec);
+    }
+
 
 }
