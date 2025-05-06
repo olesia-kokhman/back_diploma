@@ -3,9 +3,12 @@ package com.backenddiploma.controllers;
 import com.backenddiploma.models.Transaction;
 import com.backenddiploma.services.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,14 +65,25 @@ public class TransactionController {
         }
     }
 
-    @GetMapping("/sorted")
-    public ResponseEntity<List<Transaction>> getSortedTransactions(@RequestParam(defaultValue = "date") String sortBy,
-                                                                   @RequestParam(defaultValue = "true") boolean direction) {
-        List<Transaction> transactions = transactionService.getSortedTransactions(sortBy, direction);
+    @GetMapping("/all")
+    public ResponseEntity<Page<Transaction>> getTransactions(
+            @RequestParam(required = false) List<Long> categoryIds,
+            @RequestParam(required = false) List<Long> accountIds,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "dateTime") String sortBy,
+            @RequestParam(defaultValue = "true") boolean direction,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size) {
+
+        Page<Transaction> transactions = transactionService.getFilteredAndSortedTransactions(
+                categoryIds, accountIds, startDate, endDate, keyword, sortBy, direction, page, size);
 
         if (transactions.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(transactions);
     }
+
 }
