@@ -1,7 +1,5 @@
 package com.backenddiploma.services;
 
-import com.backenddiploma.logic.TransactionFilterSpecification;
-import com.backenddiploma.logic.TransactionSearchSpecification;
 import com.backenddiploma.models.Transaction;
 import com.backenddiploma.repositories.TransactionRepository;
 import lombok.RequiredArgsConstructor;

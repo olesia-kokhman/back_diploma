@@ -1,4 +1,4 @@
-package com.backenddiploma.logic;
+package com.backenddiploma.services;
 
 import com.backenddiploma.models.Transaction;
 import jakarta.persistence.criteria.JoinType;
