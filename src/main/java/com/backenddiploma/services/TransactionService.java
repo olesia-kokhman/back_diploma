@@ -1,6 +1,11 @@
 package com.backenddiploma.services;
 
+import com.backenddiploma.dto.TransactionRequestDTO;
+import com.backenddiploma.models.Account;
+import com.backenddiploma.models.Category;
 import com.backenddiploma.models.Transaction;
+import com.backenddiploma.repositories.AccountRepository;
+import com.backenddiploma.repositories.CategoryRepository;
 import com.backenddiploma.repositories.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +24,8 @@ import java.util.Optional;
 public class TransactionService {
 
     private final TransactionRepository transactionRepository;
+    private final AccountRepository accountRepository;
+    private final CategoryRepository categoryRepository;
 
     public List<Transaction> getAllTransactions() {
         return transactionRepository.findAll();
@@ -31,6 +38,27 @@ public class TransactionService {
     public Transaction addTransaction(Transaction transaction) {
         return transactionRepository.save(transaction);
     }
+
+    public Transaction createTransaction(TransactionRequestDTO request) {
+        Transaction transaction = new Transaction();
+
+        transaction.setTransactionType(request.getTransactionType());
+        transaction.setAmount(request.getAmount());
+        transaction.setCurrency(request.getCurrency());
+        transaction.setDescription(request.getDescription());
+        transaction.setDateTime(request.getDateTime());
+
+        Account account = accountRepository.findById(request.getAccountId())
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+        transaction.setAccount(account);
+
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+        transaction.setCategory(category);
+
+        return transactionRepository.save(transaction);
+    }
+
 
     public Transaction updateTransaction(Long id, Transaction transaction) {
         if(transactionRepository.existsById(id)) {

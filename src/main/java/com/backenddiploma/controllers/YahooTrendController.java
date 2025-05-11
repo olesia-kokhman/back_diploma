@@ -1,6 +1,6 @@
 package com.backenddiploma.controllers;
 
-import com.backenddiploma.dto.security.YahooTrendDTO;
+import com.backenddiploma.dto.YahooTrendDTO;
 import com.backenddiploma.services.YahooTrendService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

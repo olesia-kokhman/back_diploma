@@ -1,4 +1,4 @@
-package com.backenddiploma.dto.security;
+package com.backenddiploma.dto;
 
 import lombok.Data;
 

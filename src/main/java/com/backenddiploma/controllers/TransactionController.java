@@ -1,5 +1,6 @@
 package com.backenddiploma.controllers;
 
+import com.backenddiploma.dto.TransactionRequestDTO;
 import com.backenddiploma.models.Transaction;
 import com.backenddiploma.services.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -40,10 +41,16 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<Transaction> addTransaction(@RequestBody Transaction transaction) {
-        Transaction savedTransaction = transactionService.addTransaction(transaction);
-        return ResponseEntity.status(201).body(savedTransaction);
+    public ResponseEntity<Transaction> addTransaction(@RequestBody TransactionRequestDTO request) {
+        Transaction saved = transactionService.createTransaction(request);
+        return ResponseEntity.ok(saved);
     }
+
+//    @PostMapping
+//    public ResponseEntity<Transaction> addTransaction(@RequestBody Transaction transaction) {
+//        Transaction savedTransaction = transactionService.addTransaction(transaction);
+//        return ResponseEntity.status(201).body(savedTransaction);
+//    }
 
     @PutMapping("/{id}")
     public ResponseEntity<Transaction> updateTransaction(@PathVariable Long id, @RequestBody Transaction updatedTransaction) {

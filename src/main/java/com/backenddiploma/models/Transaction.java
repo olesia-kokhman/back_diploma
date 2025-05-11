@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "transactions")
@@ -31,12 +29,9 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     private Currency currency;
 
-    @ManyToMany
-    @JoinTable(
-            name = "transaction_category",
-            joinColumns = @JoinColumn(name = "transaction_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id") )
-    private List<Category> category = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     private String description;
 

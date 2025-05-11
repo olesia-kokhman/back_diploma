@@ -109,6 +109,7 @@
     </changeSet>
 
     <changeSet id="4-load-seeds" author="olesia">
+        <validCheckSum>ANY</validCheckSum>
         <loadData tableName="categories"
                   file="classpath:db/seeds/categories_seed.csv"
                   separator=",">
@@ -146,4 +147,111 @@
             <column name="category_id" type="bigint" />
         </loadData>
     </changeSet>
+
+    <changeSet id="5-replace-categories-array" author="olesia">
+        <addColumn tableName="transactions">
+            <column name="category_id" type="bigint"/>
+        </addColumn>
+
+        <addForeignKeyConstraint
+                baseTableName="transactions"
+                baseColumnNames="category_id"
+                referencedTableName="categories"
+                referencedColumnNames="id"
+                constraintName="fk_transaction_category"
+        />
+
+        <dropTable tableName="transaction_category"/>
+    </changeSet>
+
+    <changeSet id="6-drop-and-recreate-transactions" author="olesia">
+        <dropTable tableName="transactions"/>
+
+        <createTable tableName="transactions">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="transaction_type" type="transaction_type_enum">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="amount" type="double">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="currency" type="currency_enum">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="description" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="date_and_time" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="account_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="category_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="transactions"
+                baseColumnNames="account_id"
+                referencedTableName="accounts"
+                referencedColumnNames="id"
+                constraintName="fk_transaction_account"/>
+
+        <addForeignKeyConstraint
+                baseTableName="transactions"
+                baseColumnNames="category_id"
+                referencedTableName="categories"
+                referencedColumnNames="id"
+                constraintName="fk_transaction_category"/>
+    </changeSet>
+
+    <changeSet id="7-allow-null-category" author="olesia">
+        <validCheckSum>ANY</validCheckSum>
+        <dropNotNullConstraint
+                tableName="transactions"
+                columnName="category_id"
+                columnDataType="bigint"/>
+
+        <loadData tableName="transactions"
+                  file="classpath:db/seeds/transactions_seed.csv"
+                  separator=",">
+            <column name="id" type="bigserial" />
+            <column name="transaction_type" type="transaction_type_enum"/>
+            <column name="amount" type="double"/>
+            <column name="currency" type="currency_enum"/>
+            <column name="description" type="varchar(255)"/>
+            <column name="date_and_time" type="timestamp"/>
+            <column name="account_id" type="bigint"/>
+        </loadData>
+    </changeSet>
+
+    <changeSet id="8-clear-and-reseed-transactions" author="olesia">
+        <delete tableName="transactions" />
+    </changeSet>
+
+    <changeSet id="9-reseed-transactions-without-id" author="olesia">
+        <loadData tableName="transactions"
+                  file="classpath:db/seeds/transactions_seed.csv"
+                  separator=",">
+            <column name="transaction_type" type="transaction_type_enum"/>
+            <column name="amount" type="double"/>
+            <column name="currency" type="currency_enum"/>
+            <column name="description" type="varchar(255)"/>
+            <column name="date_and_time" type="timestamp"/>
+            <column name="account_id" type="bigint"/>
+            <column name="category_id" type="bigint"/>
+        </loadData>
+    </changeSet>
+
 </databaseChangeLog>

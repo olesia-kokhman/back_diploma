@@ -1,7 +1,7 @@
 package com.backenddiploma.services;
 
-import com.backenddiploma.dto.security.StockWidgetDTO;
-import com.backenddiploma.dto.security.YahooTrendDTO;
+import com.backenddiploma.dto.StockWidgetDTO;
+import com.backenddiploma.dto.YahooTrendDTO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
