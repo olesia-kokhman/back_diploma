@@ -254,4 +254,311 @@
         </loadData>
     </changeSet>
 
+    <changeSet id="10-create-all-related-tables" author="olesia">
+        <sql>
+            CREATE TYPE user_role_enum AS ENUM ('INDIVIDUAL', 'ADMIN', 'EDITOR', 'VIEWER');
+            CREATE TYPE available_language_enum AS ENUM ('EN', 'UK');
+            CREATE TYPE available_theme_enum AS ENUM ('LIGHT', 'DARK');
+            CREATE TYPE stock_trend_enum AS ENUM ('UP', 'DOWN', 'ACTIVE');
+        </sql>
+
+        <createTable tableName="users">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password_hash" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="registration_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="user_role_enum">
+                <constraints nullable="false"/>
+            </column>
+            <column name="profile_picture_url" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="user_settings">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="language" type="available_language_enum">
+                <constraints nullable="false"/>
+            </column>
+            <column name="default_currency" type="currency_enum">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_format" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time_format" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="theme" type="available_theme_enum">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="user_settings"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_user_settings_user"/>
+
+        <createTable tableName="payment_reminders">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency" type="currency_enum">
+                <constraints nullable="false"/>
+            </column>
+            <column name="due_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(255)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="payment_reminders"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_payment_reminders_user"/>
+
+        <createTable tableName="saving_tips">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="stock_info">
+            <column name="symbol" type="varchar(10)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="current_price" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_percent" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="trend" type="stock_trend_enum">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="11-create-budgets-table" author="olesia">
+        <sql>
+            CREATE TYPE budget_type_enum AS ENUM ('INCOME', 'EXPENSE');
+        </sql>
+
+        <createTable tableName="budgets">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="type" type="budget_type_enum">
+                <constraints nullable="false"/>
+            </column>
+            <column name="planned_amount" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actual_amount" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="available_amount" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency" type="currency_enum">
+                <constraints nullable="false"/>
+            </column>
+            <column name="period_start" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="period_end" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column  name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="budgets"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_budgets_user"/>
+
+        <addForeignKeyConstraint baseTableName="budgets"
+                                 baseColumnNames="category_id"
+                                 referencedTableName="categories"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_budgets_category"/>
+
+    </changeSet>
+
+    <changeSet id="12-modify-tables" author="olesia">
+        <dropColumn tableName="users" columnName="registration_date"/>
+
+        <addColumn tableName="users">
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="user_settings">
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="payment_reminders">
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="saving_tips">
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <dropColumn tableName="stock_info" columnName="updated_at"/>
+        <addColumn tableName="stock_info">
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="13-modify-filled-tables" author="olesia">
+        <addColumn tableName="transactions">
+            <column name="transferred_at" type="timestamp"/>
+        </addColumn>
+        <update tableName="transactions">
+            <column name="transferred_at" valueComputed="date_and_time"/>
+            <where>transferred_at IS NULL</where>
+        </update>
+        <dropColumn tableName="transactions" columnName="date_and_time"/>
+        <addNotNullConstraint tableName="transactions" columnName="transferred_at" columnDataType="timestamp"/>
+
+        <addColumn tableName="transactions">
+            <column name="user_id" type="bigint"/>
+            <column name="created_at" type="timestamp"/>
+            <column name="updated_at" type="timestamp"/>
+        </addColumn>
+        <update tableName="transactions">
+            <column name="created_at" valueDate="NOW()"/>
+            <where>created_at IS NULL</where>
+        </update>
+        <addNotNullConstraint tableName="transactions" columnName="created_at" columnDataType="timestamp"/>
+
+        <addForeignKeyConstraint baseTableName="transactions"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_transactions_user"/>
+
+        <addColumn tableName="accounts">
+            <column name="user_id" type="bigint"/>
+            <column name="created_at" type="timestamp"/>
+            <column name="updated_at" type="timestamp"/>
+        </addColumn>
+        <update tableName="accounts">
+            <column name="created_at" valueDate="NOW()"/>
+            <where>created_at IS NULL</where>
+        </update>
+        <addNotNullConstraint tableName="accounts" columnName="created_at" columnDataType="timestamp"/>
+
+        <addForeignKeyConstraint baseTableName="accounts"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_accounts_user"/>
+
+        <addColumn tableName="categories">
+            <column name="user_id" type="bigint"/>
+            <column name="type" type="budget_type_enum"/>
+            <column name="is_default" type="boolean"/>
+            <column name="created_at" type="timestamp"/>
+            <column name="updated_at" type="timestamp"/>
+        </addColumn>
+        <update tableName="categories">
+            <column name="type" value="EXPENSE"/>
+            <where>type IS NULL</where>
+        </update>
+        <update tableName="categories">
+            <column name="is_default" valueBoolean="true"/>
+            <where>is_default IS NULL</where>
+        </update>
+        <update tableName="categories">
+            <column name="created_at" valueDate="NOW()"/>
+            <where>created_at IS NULL</where>
+        </update>
+        <addNotNullConstraint tableName="categories" columnName="type" columnDataType="budget_type_enum"/>
+        <addNotNullConstraint tableName="categories" columnName="is_default" columnDataType="boolean"/>
+        <addNotNullConstraint tableName="categories" columnName="created_at" columnDataType="timestamp"/>
+
+        <addForeignKeyConstraint baseTableName="categories"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_categories_user"/>
+
+    </changeSet>
+
+
 </databaseChangeLog>
