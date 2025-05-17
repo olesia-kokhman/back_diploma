@@ -1,64 +1,45 @@
 package com.backenddiploma.controllers;
 
-import com.backenddiploma.models.Account;
+import com.backenddiploma.dto.account.AccountCreateDTO;
+import com.backenddiploma.dto.account.AccountResponseDTO;
+import com.backenddiploma.dto.account.AccountUpdateDTO;
 import com.backenddiploma.services.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/accounts")
+@RequiredArgsConstructor
 public class AccountController {
 
     private final AccountService accountService;
 
-    @GetMapping
-    public ResponseEntity<List<Account>> getAllAccounts() {
-        List<Account> accounts = accountService.getAllAccounts();
-        if (accounts.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(accounts);
-        }
+    @PostMapping
+    public ResponseEntity<AccountResponseDTO> create(@RequestBody AccountCreateDTO dto) {
+        return ResponseEntity.ok(accountService.create(dto));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Account> getAccountById(@PathVariable Long id) {
-        Optional<Account> account = accountService.getAccountById(id);
-        if (account.isPresent()) {
-            return ResponseEntity.ok(account.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PostMapping
-    public ResponseEntity<Account> addAccount(@RequestBody Account account) {
-        Account savedAccount = accountService.addAccount(account);
-        return ResponseEntity.status(201).body(savedAccount);
+    public ResponseEntity<AccountResponseDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(accountService.getById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Account> updateAccount(@PathVariable Long id, @RequestBody Account updatedAccount) {
-        try {
-            Account account = accountService.updateAccount(id, updatedAccount);
-            return ResponseEntity.ok(account);
-        } catch (IllegalArgumentException exception) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<AccountResponseDTO> update(@PathVariable Long id, @RequestBody AccountUpdateDTO dto) {
+        return ResponseEntity.ok(accountService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
-        try {
-            accountService.deleteAccount(id);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException exception) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        accountService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<AccountResponseDTO>> getAllByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(accountService.getAllByUser(userId));
     }
 }

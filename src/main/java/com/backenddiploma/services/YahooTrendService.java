@@ -1,6 +1,6 @@
 package com.backenddiploma.services;
 
-import com.backenddiploma.dto.YahooTrendDTO;
+import com.backenddiploma.dto.stockinfo.in.YahooTrendDTO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

@@ -1,8 +1,8 @@
-package com.backenddiploma.models;
+package com.backenddiploma.models.enums;
 
 public enum Currency {
     UAH,
-    EUR,
     USD,
+    EUR,
     PLN
 }

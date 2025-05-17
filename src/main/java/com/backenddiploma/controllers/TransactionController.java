@@ -1,7 +1,8 @@
 package com.backenddiploma.controllers;
 
-import com.backenddiploma.dto.TransactionRequestDTO;
-import com.backenddiploma.models.Transaction;
+import com.backenddiploma.dto.transaction.TransactionCreateDTO;
+import com.backenddiploma.dto.transaction.TransactionResponseDTO;
+import com.backenddiploma.dto.transaction.TransactionUpdateDTO;
 import com.backenddiploma.services.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,86 +12,71 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/transactions")
+@RequiredArgsConstructor
 public class TransactionController {
 
     private final TransactionService transactionService;
 
-    @GetMapping
-    public ResponseEntity<List<Transaction>> getAllTransactions() {
-        List<Transaction> transactions = transactionService.getAllTransactions();
-        if (transactions.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(transactions);
-        }
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Transaction> getTransactionById(@PathVariable Long id) {
-        Optional<Transaction> transaction = transactionService.getTransactionById(id);
-        if (transaction.isPresent()) {
-            return ResponseEntity.ok(transaction.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PostMapping
-    public ResponseEntity<Transaction> addTransaction(@RequestBody TransactionRequestDTO request) {
-        Transaction saved = transactionService.createTransaction(request);
-        return ResponseEntity.ok(saved);
-    }
-
-//    @PostMapping
-//    public ResponseEntity<Transaction> addTransaction(@RequestBody Transaction transaction) {
-//        Transaction savedTransaction = transactionService.addTransaction(transaction);
-//        return ResponseEntity.status(201).body(savedTransaction);
-//    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Transaction> updateTransaction(@PathVariable Long id, @RequestBody Transaction updatedTransaction) {
-        try {
-            Transaction transaction = transactionService.updateTransaction(id, updatedTransaction);
-            return ResponseEntity.ok(transaction);
-        } catch (IllegalArgumentException exception) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
-        try {
-            transactionService.deleteTransaction(id);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException exception) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     @GetMapping("/all")
-    public ResponseEntity<Page<Transaction>> getTransactions(
+    public ResponseEntity<Page<TransactionResponseDTO>> getTransactions(
+            @RequestParam Long userId,
             @RequestParam(required = false) List<Long> categoryIds,
             @RequestParam(required = false) List<Long> accountIds,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam(required = false) String keyword,
-            @RequestParam(defaultValue = "dateTime") String sortBy,
+            @RequestParam(defaultValue = "dateAndTime") String sortBy,
             @RequestParam(defaultValue = "true") boolean direction,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "15") int size) {
-
-        Page<Transaction> transactions = transactionService.getFilteredAndSortedTransactions(
-                categoryIds, accountIds, startDate, endDate, keyword, sortBy, direction, page, size);
+            @RequestParam(defaultValue = "15") int size
+    ) {
+        Page<TransactionResponseDTO> transactions = transactionService.getFilteredAndSortedTransactions(
+                userId, categoryIds, accountIds, startDate, endDate, keyword, sortBy, direction, page, size);
 
         if (transactions.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
+
         return ResponseEntity.ok(transactions);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<TransactionResponseDTO> getById(
+            @PathVariable Long id,
+            @RequestParam Long userId
+    ) {
+        TransactionResponseDTO transaction = transactionService.getById(id, userId);
+        return ResponseEntity.ok(transaction);
+    }
+
+    @PostMapping
+    public ResponseEntity<TransactionResponseDTO> create(
+            @RequestBody TransactionCreateDTO dto,
+            @RequestParam Long userId
+    ) {
+        TransactionResponseDTO created = transactionService.create(dto, userId);
+        return ResponseEntity.ok(created);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TransactionResponseDTO> update(
+            @PathVariable Long id,
+            @RequestBody TransactionUpdateDTO dto,
+            @RequestParam Long userId
+    ) {
+        TransactionResponseDTO updated = transactionService.update(id, dto, userId);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(
+            @PathVariable Long id,
+            @RequestParam Long userId
+    ) {
+        transactionService.delete(id, userId);
+        return ResponseEntity.noContent().build();
+    }
 }

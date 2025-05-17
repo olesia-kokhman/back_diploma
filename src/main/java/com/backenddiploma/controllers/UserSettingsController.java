@@ -1,6 +1,8 @@
 package com.backenddiploma.controllers;
 
-import com.backenddiploma.models.UserSettings;
+import com.backenddiploma.dto.usersettings.UserSettingsCreateDTO;
+import com.backenddiploma.dto.usersettings.UserSettingsResponseDTO;
+import com.backenddiploma.dto.usersettings.UserSettingsUpdateDTO;
 import com.backenddiploma.services.UserSettingsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,34 +15,24 @@ public class UserSettingsController {
 
     private final UserSettingsService userSettingsService;
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserSettings> getUserSettings(@PathVariable Long userId) {
-        UserSettings settings = userSettingsService.getSettings(userId);
-        if (settings != null) {
-            return ResponseEntity.ok(settings);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @PostMapping
+    public ResponseEntity<UserSettingsResponseDTO> create(@RequestBody UserSettingsCreateDTO dto) {
+        return ResponseEntity.ok(userSettingsService.create(dto));
     }
 
-    @PostMapping("/{userId}")
-    public ResponseEntity<UserSettings> createSettingsIfAbsent(@PathVariable Long userId) {
-        UserSettings existing = userSettingsService.getSettings(userId);
-        if (existing != null) {
-            return ResponseEntity.status(409).body(existing);
-        } else {
-            UserSettings settings = userSettingsService.addSettingsIfAbsent(userId);
-            return ResponseEntity.ok(settings);
-        }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<UserSettingsResponseDTO> getByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(userSettingsService.getByUserId(userId));
     }
 
-    @PutMapping("/{userId}")
-    public ResponseEntity<UserSettings> updateUserSettings(@PathVariable Long userId, @RequestBody UserSettings updates) {
-        try {
-            UserSettings updatedSettings = userSettingsService.updateUserSettings(userId, updates);
-            return ResponseEntity.ok(updatedSettings);
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.notFound().build();
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<UserSettingsResponseDTO> update(@PathVariable Long id, @RequestBody UserSettingsUpdateDTO dto) {
+        return ResponseEntity.ok(userSettingsService.update(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        userSettingsService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

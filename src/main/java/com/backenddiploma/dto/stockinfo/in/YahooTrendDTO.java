@@ -1,4 +1,4 @@
-package com.backenddiploma.dto;
+package com.backenddiploma.dto.stockinfo.in;
 
 import lombok.Data;
 

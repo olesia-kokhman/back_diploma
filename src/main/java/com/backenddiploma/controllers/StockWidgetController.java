@@ -1,6 +1,6 @@
 package com.backenddiploma.controllers;
 
-import com.backenddiploma.dto.StockWidgetDTO;
+import com.backenddiploma.dto.stockinfo.in.StockWidgetDTO;
 import com.backenddiploma.services.StockWidgetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

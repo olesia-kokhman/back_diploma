@@ -1,11 +1,14 @@
 package com.backenddiploma.models;
 
+import com.backenddiploma.models.enums.LanguageAbbreviation;
+import com.backenddiploma.models.enums.Theme;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
+import com.backenddiploma.models.enums.Currency;
 
 @Entity
-@Table(name = "user_settings", uniqueConstraints = @UniqueConstraint(columnNames = "user_id"))
+@Table(name = "user_settings", uniqueConstraints = @UniqueConstraint(columnNames = "user_id")) // singleton
 @Data
 public class UserSettings {
 
@@ -13,8 +16,9 @@ public class UserSettings {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

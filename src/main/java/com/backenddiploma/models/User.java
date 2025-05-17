@@ -1,5 +1,6 @@
 package com.backenddiploma.models;
 
+import com.backenddiploma.models.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

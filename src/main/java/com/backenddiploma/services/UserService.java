@@ -1,12 +1,20 @@
 package com.backenddiploma.services;
 
+import com.backenddiploma.config.exceptions.AlreadyExistsException;
+import com.backenddiploma.config.exceptions.NotFoundException;
+import com.backenddiploma.dto.user.UserCreateDTO;
+import com.backenddiploma.dto.user.UserResponseDTO;
+import com.backenddiploma.dto.user.UserUpdateDTO;
+import com.backenddiploma.mappers.UserMapper;
 import com.backenddiploma.models.User;
 import com.backenddiploma.repositories.UserRepository;
-import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;;
+import java.util.stream.Collectors;
 
 //import com.backenddiploma.security.UserDetailsImpl;
 //import org.springframework.core.userdetails.UserDetails;
@@ -17,8 +25,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
-
 //    @Override
 //    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 //        User user = userRepository.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException(
@@ -27,41 +33,57 @@ public class UserService {
 //        return UserDetailsImpl.build(user);
 //    }
 
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    public Optional<User> getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Transactional
-    public User createUser(User user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already exists");
+    public UserResponseDTO create(UserCreateDTO dto) {
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new AlreadyExistsException("User with email already exists: " + dto.getEmail());
         }
-        return userRepository.save(user);
+
+        User user = userMapper.toEntity(dto);
+        User savedUser = userRepository.save(user);
+
+        return userMapper.toResponse(savedUser);
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponseDTO getById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
+        return userMapper.toResponse(user);
     }
 
     @Transactional
-    public User updateUser(Long id, User updates) {
-        User existing = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public UserResponseDTO update(Long id, UserUpdateDTO dto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
 
-        existing.setUsername(updates.getUsername());
-        existing.setPasswordHash(updates.getPasswordHash());
-        existing.setRole(updates.getRole());
-        existing.setProfilePictureUrl(updates.getProfilePictureUrl());
-
-        return userRepository.save(existing);
-    }
-
-    @Transactional
-    public void deleteUser(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new RuntimeException("User not found");
+        if (dto.getEmail() != null && !dto.getEmail().equals(user.getEmail())) {
+            if (userRepository.existsByEmail(dto.getEmail())) {
+                throw new AlreadyExistsException("User with email already exists: " + dto.getEmail());
+            }
         }
-        userRepository.deleteById(id);
+
+        userMapper.updateUserFromDto(user, dto);
+        User updatedUser = userRepository.save(user);
+
+        return userMapper.toResponse(updatedUser);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
+        userRepository.delete(user);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserResponseDTO> getAll() {
+        return userRepository.findAll().stream()
+                .map(userMapper::toResponse)
+                .collect(Collectors.toList());
     }
 
 }
