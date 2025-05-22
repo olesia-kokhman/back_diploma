@@ -69,7 +69,7 @@ public class TransactionService {
     }
 
     @Transactional
-    public TransactionResponseDTO create(TransactionCreateDTO dto, Long userId) {
+    public TransactionResponseDTO create(TransactionCreateDTO dto) {
         Account account = accountRepository.findById(dto.getAccountId())
                 .orElseThrow(() -> new NotFoundException("Account not found with id: " + dto.getAccountId()));
 
@@ -79,8 +79,8 @@ public class TransactionService {
                     .orElseThrow(() -> new NotFoundException("Category not found with id: " + dto.getCategoryId()));
         }
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
+        User user = userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + dto.getUserId()));
 
         Transaction transaction = transactionMapper.toEntity(dto, account, category, user);
         Transaction savedTransaction = transactionRepository.save(transaction);

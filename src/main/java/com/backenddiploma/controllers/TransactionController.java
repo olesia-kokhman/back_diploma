@@ -57,7 +57,7 @@ public class TransactionController {
             @RequestBody TransactionCreateDTO dto,
             @RequestParam Long userId
     ) {
-        TransactionResponseDTO created = transactionService.create(dto, userId);
+        TransactionResponseDTO created = transactionService.create(dto);
         return ResponseEntity.ok(created);
     }
 
