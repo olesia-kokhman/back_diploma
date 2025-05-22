@@ -15,5 +15,4 @@ public class TransactionCreateDTO {
     private Long categoryId;
     private Long userId;
     private LocalDateTime transferredAt;
-    private LocalDateTime dateAndTime;
 }

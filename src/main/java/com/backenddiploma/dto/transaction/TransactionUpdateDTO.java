@@ -14,5 +14,4 @@ public class TransactionUpdateDTO {
     private Long accountId;
     private Long categoryId;
     private LocalDateTime transferredAt;
-    private LocalDateTime dateAndTime;
 }

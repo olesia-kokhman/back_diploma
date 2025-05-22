@@ -31,6 +31,12 @@ public class Category {
     @Column(name = "is_default", nullable = false)
     private boolean isDefault;
 
+    @Column(name = "start_mcc")
+    private int startMcc;
+
+    @Column(name = "end_mcc")
+    private int endMcc;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

@@ -560,5 +560,70 @@
 
     </changeSet>
 
+    <changeSet id="14-modify-accounts-table" author="olesia">
+
+        <createSequence
+                sequenceName="accounts_id_seq"
+                startValue="1"
+                incrementBy="1"/>
+        <addDefaultValue
+                tableName="accounts"
+                columnName="id"
+                defaultValueSequenceNext="accounts_id_seq"/>
+        <dropColumn tableName="accounts" columnName="jar_goal"/>
+    </changeSet>
+
+    <changeSet id="15-add-mcc-and-sequence-to-categories" author="your_name">
+        <createSequence sequenceName="categories_id_seq" startValue="1" incrementBy="1"/>
+        <addDefaultValue tableName="categories" columnName="id" defaultValueSequenceNext="categories_id_seq"/>
+
+        <addColumn tableName="categories">
+            <column name="start_mcc" type="INT"/>
+        </addColumn>
+
+        <addColumn tableName="categories">
+            <column name="end_mcc" type="INT"/>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="16-seed-default-categories" author="olesia">
+
+        <delete tableName="transactions"/>
+        <delete tableName="categories"/>
+
+        <loadData tableName="categories"
+                  file="classpath:db/seeds/default_categories_seed.csv"
+                  separator=",">
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="user_id" type="NUMERIC"/>
+            <column name="type" type="budget_type_enum"/>
+            <column name="is_default" type="BOOLEAN"/>
+            <column name="created_at" type="TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP"/>
+            <column name="start_mcc" type="NUMERIC"/>
+            <column name="end_mcc" type="NUMERIC"/>
+        </loadData>
+    </changeSet>
+
+    <changeSet id="17-drop-date-and-time-column" author="olesia">
+        <dropColumn tableName="transactions" columnName="date_and_time"/>
+    </changeSet>
+
+    <changeSet id="18-rename-primary-key-add-id" author="olesia">
+        <dropPrimaryKey tableName="stock_info" />
+        <addColumn tableName="stock_info">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </addColumn>
+        <modifyDataType tableName="stock_info" columnName="symbol" newDataType="varchar(10)" />
+        <addNotNullConstraint tableName="stock_info" columnName="symbol" columnDataType="varchar(10)"/>
+        <addColumn tableName="stock_info">
+            <column name="generated_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>

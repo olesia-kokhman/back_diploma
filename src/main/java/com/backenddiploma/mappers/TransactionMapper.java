@@ -21,7 +21,6 @@ public class TransactionMapper {
         transaction.setCategory(category);
         transaction.setUser(user);
         transaction.setTransferredAt(request.getTransferredAt());
-        transaction.setDateAndTime(request.getDateAndTime());
         return transaction;
     }
 
@@ -47,9 +46,7 @@ public class TransactionMapper {
         if (request.getTransferredAt() != null) {
             transaction.setTransferredAt(request.getTransferredAt());
         }
-        if (request.getDateAndTime() != null) {
-            transaction.setDateAndTime(request.getDateAndTime());
-        }
+
     }
 
     public TransactionResponseDTO toResponse(Transaction transaction) {
@@ -63,7 +60,6 @@ public class TransactionMapper {
         response.setCategoryId(transaction.getCategory() != null ? transaction.getCategory().getId() : null);
         response.setUserId(transaction.getUser() != null ? transaction.getUser().getId() : null);
         response.setTransferredAt(transaction.getTransferredAt());
-        response.setDateAndTime(transaction.getDateAndTime());
         response.setCreatedAt(transaction.getCreatedAt());
         response.setUpdatedAt(transaction.getUpdatedAt());
         return response;

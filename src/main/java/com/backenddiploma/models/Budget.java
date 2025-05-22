@@ -25,7 +25,7 @@ public class Budget {
 
     @JoinColumn(name = "category_id")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private Category categoryId;
+    private Category category;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

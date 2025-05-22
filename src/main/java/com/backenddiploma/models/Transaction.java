@@ -53,9 +53,6 @@ public class Transaction {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(name = "date_and_time")
-    private LocalDateTime dateAndTime;
-
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();

@@ -1,11 +1,13 @@
-package com.backenddiploma.dto.stockinfo.in;
+package com.backenddiploma.dto.stockinfo;
 
 import lombok.Data;
 
 @Data
-public class StockWidgetDTO {
+public class StockInfoCreateDTO {
     private String symbol;
     private double currentPrice;     // c
+    private double change;           // d
+    private double percentChange;    // dp
     private double highPrice;        // h
     private double lowPrice;         // l
     private double openPrice;        // o

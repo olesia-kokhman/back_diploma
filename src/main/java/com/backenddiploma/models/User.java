@@ -33,6 +33,12 @@ public class User {
     @Column(name = "profile_picture_url", length = 255)
     private String profilePictureUrl;
 
+    @Column(name = "webhook_url")
+    private String webHookUrl;
+
+    @Column(name= "monobank token")
+    private String monobankToken;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

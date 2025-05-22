@@ -16,7 +16,6 @@ public class TransactionResponseDTO {
     private Long categoryId;
     private Long userId;
     private LocalDateTime transferredAt;
-    private LocalDateTime dateAndTime;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

@@ -1,68 +1,74 @@
 package com.backenddiploma.services;
 
-import com.backenddiploma.config.exceptions.AlreadyExistsException;
-import com.backenddiploma.dto.stockinfo.out.StockInfoCreateDTO;
-import com.backenddiploma.dto.stockinfo.out.StockInfoResponseDTO;
-import com.backenddiploma.dto.stockinfo.out.StockInfoUpdateDTO;
 import com.backenddiploma.config.exceptions.NotFoundException;
+import com.backenddiploma.dto.stockinfo.StockInfoCreateDTO;
+import com.backenddiploma.dto.stockinfo.StockInfoResponseDTO;
 import com.backenddiploma.mappers.StockInfoMapper;
 import com.backenddiploma.models.StockInfo;
+import com.backenddiploma.models.enums.StockTrend;
 import com.backenddiploma.repositories.StockInfoRepository;
+import com.backenddiploma.services.integrations.StockWidgetService;
+import com.backenddiploma.services.integrations.YahooTrendService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class StockInfoService {
+    private final YahooTrendService yahooTrendService;
+    private final StockWidgetService stockWidgetService;
+    private final StockInfoMapper mapper;
+    private final StockInfoRepository repository;
 
-    private final StockInfoRepository stockInfoRepository;
-    private final StockInfoMapper stockInfoMapper;
+    @Transactional()
+    public void fetchAndSaveAll() {
+        repository.deleteAll();
+        Map<String, List<String>> trends = yahooTrendService.getTrends();
+        createStockInfo(trends.getOrDefault("gainers", Collections.emptyList()), StockTrend.UP) ;
+        createStockInfo(trends.getOrDefault("losers", Collections.emptyList()), StockTrend.DOWN) ;
+        createStockInfo(trends.getOrDefault("actives", Collections.emptyList()), StockTrend.ACTIVE) ;
+    }
 
-    @Transactional
-    public StockInfoResponseDTO create(StockInfoCreateDTO dto) {
-        if (stockInfoRepository.existsById(dto.getSymbol())) {
-            throw new AlreadyExistsException("Stock with symbol already exists: " + dto.getSymbol());
+    @Transactional()
+    public void createStockInfo(List<String> trends, StockTrend trendType) { // internal request
+
+        for(String trend: trends) {
+            StockInfoCreateDTO dto = stockWidgetService.getQuoteBySymbol(trend);
+            StockInfo stockInfo = mapper.toEntity(dto, trendType);
+            repository.save(stockInfo);
         }
-
-        StockInfo stockInfo = stockInfoMapper.toEntity(dto);
-        StockInfo savedStock = stockInfoRepository.save(stockInfo);
-
-        return stockInfoMapper.toResponse(savedStock);
     }
 
     @Transactional(readOnly = true)
-    public StockInfoResponseDTO getBySymbol(String symbol) {
-        StockInfo stockInfo = stockInfoRepository.findById(symbol)
-                .orElseThrow(() -> new NotFoundException("Stock not found with symbol: " + symbol));
-        return stockInfoMapper.toResponse(stockInfo);
-    }
-
-    @Transactional
-    public StockInfoResponseDTO update(String symbol, StockInfoUpdateDTO dto) {
-        StockInfo stockInfo = stockInfoRepository.findById(symbol)
-                .orElseThrow(() -> new NotFoundException("Stock not found with symbol: " + symbol));
-
-        stockInfoMapper.updateStockInfoFromDto(stockInfo, dto);
-        StockInfo updatedStock = stockInfoRepository.save(stockInfo);
-
-        return stockInfoMapper.toResponse(updatedStock);
-    }
-
-    @Transactional
-    public void delete(String symbol) {
-        StockInfo stockInfo = stockInfoRepository.findById(symbol)
-                .orElseThrow(() -> new NotFoundException("Stock not found with symbol: " + symbol));
-        stockInfoRepository.delete(stockInfo);
+    public List<StockInfoResponseDTO> getAllTrends() {
+        return repository.findAll()
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<StockInfoResponseDTO> getAll() {
-        return stockInfoRepository.findAll().stream()
-                .map(stockInfoMapper::toResponse)
-                .collect(Collectors.toList());
+    public StockInfoResponseDTO getTrendById(Long id) {
+        return repository.findById((long) id)
+                .map(mapper::toResponse)
+                .orElseThrow(() -> new NotFoundException("Stock trend not found with ID: " + id));
+    }
+
+    @Transactional(readOnly = true)
+    public StockInfoResponseDTO getTrendByQuote(String symbol) {
+        return repository.findBySymbol(symbol)
+                .map(mapper::toResponse)
+                .orElseThrow(() -> new NotFoundException("Stock trend not found for symbol: " + symbol));
+    }
+
+    @Transactional(readOnly = true)
+    public List<StockInfoResponseDTO> getByTrend(StockTrend trend) {
+        return repository.findByTrend(trend).stream()
+                .map(mapper::toResponse)
+                .toList();
     }
 }

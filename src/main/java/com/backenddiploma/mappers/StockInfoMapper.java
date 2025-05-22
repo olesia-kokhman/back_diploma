@@ -1,48 +1,40 @@
 package com.backenddiploma.mappers;
 
-import com.backenddiploma.dto.stockinfo.out.StockInfoCreateDTO;
-import com.backenddiploma.dto.stockinfo.out.StockInfoResponseDTO;
-import com.backenddiploma.dto.stockinfo.out.StockInfoUpdateDTO;
+import com.backenddiploma.dto.stockinfo.StockInfoCreateDTO;
+import com.backenddiploma.dto.stockinfo.StockInfoResponseDTO;
 import com.backenddiploma.models.StockInfo;
+import com.backenddiploma.models.enums.StockTrend;
 import org.springframework.stereotype.Component;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Component
 public class StockInfoMapper {
 
-    public StockInfo toEntity(StockInfoCreateDTO dto) {
+    public StockInfo toEntity(StockInfoCreateDTO dto, StockTrend trend) {
         StockInfo stockInfo = new StockInfo();
         stockInfo.setSymbol(dto.getSymbol());
-        stockInfo.setName(dto.getName());
+        stockInfo.setName("Default name, needs another API to change"); // another API
         stockInfo.setCurrentPrice(dto.getCurrentPrice());
-        stockInfo.setChangePercent(dto.getChangePercent());
-        stockInfo.setTrend(dto.getTrend());
+        stockInfo.setChangePercent(dto.getPercentChange());
+        stockInfo.setGeneratedAt(LocalDateTime.ofInstant(Instant.ofEpochSecond(dto.getTimestamp()), ZoneId.systemDefault()));
+        stockInfo.setTrend(trend);
         return stockInfo;
     }
 
-    public void updateStockInfoFromDto(StockInfo stockInfo, StockInfoUpdateDTO dto) {
-        if (dto.getName() != null) {
-            stockInfo.setName(dto.getName());
-        }
-        if (dto.getCurrentPrice() != null) {
-            stockInfo.setCurrentPrice(dto.getCurrentPrice());
-        }
-        if (dto.getChangePercent() != null) {
-            stockInfo.setChangePercent(dto.getChangePercent());
-        }
-        if (dto.getTrend() != null) {
-            stockInfo.setTrend(dto.getTrend());
-        }
-    }
-
     public StockInfoResponseDTO toResponse(StockInfo stockInfo) {
-        StockInfoResponseDTO response = new StockInfoResponseDTO();
-        response.setSymbol(stockInfo.getSymbol());
-        response.setName(stockInfo.getName());
-        response.setCurrentPrice(stockInfo.getCurrentPrice());
-        response.setChangePercent(stockInfo.getChangePercent());
-        response.setTrend(stockInfo.getTrend());
-        response.setCreatedAt(stockInfo.getCreatedAt());
-        response.setUpdatedAt(stockInfo.getUpdatedAt());
-        return response;
+        StockInfoResponseDTO dto = new StockInfoResponseDTO();
+        dto.setId(stockInfo.getId());
+        dto.setSymbol(stockInfo.getSymbol());
+        dto.setName(stockInfo.getName());
+        dto.setCurrentPrice(stockInfo.getCurrentPrice());
+        dto.setChangePercent(stockInfo.getChangePercent());
+        dto.setGeneratedAt(stockInfo.getGeneratedAt());
+        dto.setTrend(stockInfo.getTrend());
+        dto.setCreatedAt(stockInfo.getCreatedAt());
+        dto.setUpdatedAt(stockInfo.getUpdatedAt());
+        return dto;
     }
 }

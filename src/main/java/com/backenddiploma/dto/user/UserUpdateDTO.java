@@ -11,4 +11,6 @@ public class UserUpdateDTO {
     private String passwordHash;
     private UserRole role;
     private String profilePictureUrl;
+    private String webHookUrl;
+    private String monobankToken;
 }
