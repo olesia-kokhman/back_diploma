@@ -12,7 +12,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class YahooTrendService {
+public class YahooSyncService {
 
     private final ObjectMapper objectMapper;
     private WebClient webClient;

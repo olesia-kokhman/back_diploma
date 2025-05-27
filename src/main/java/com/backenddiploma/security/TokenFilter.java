@@ -10,6 +10,7 @@
 //import org.springframework.security.core.context.SecurityContextHolder;
 //import org.springframework.security.core.userdetails.UserDetails;
 //import org.springframework.security.core.userdetails.UserDetailsService;
+//import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 //import org.springframework.stereotype.Component;
 //import org.springframework.web.filter.OncePerRequestFilter;
 //
@@ -19,38 +20,31 @@
 //@RequiredArgsConstructor
 //public class TokenFilter extends OncePerRequestFilter {
 //    private final JwtCore jwtCore;
-//    private final UserDetailsService userDetailsService;
+//    private final CustomUserDetailsService userDetailsService;
 //
 //    @Override
 //    protected void doFilterInternal(HttpServletRequest request,
-//                                    HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-//        String jwt = null;
-//        String username = null;
-//        UserDetails userDetails = null;
-//        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = null;
+//                                    HttpServletResponse response,
+//                                    FilterChain filterChain) throws ServletException, IOException {
+//        String authHeader = request.getHeader("Authorization");
 //
-//        try {
-//            String headerAuth = request.getHeader("Authorization");
-//            if(headerAuth != null && headerAuth.startsWith("Bearer ")) {
-//                jwt = headerAuth.substring(7);
-//            }
+//        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+//            String token = authHeader.substring(7);
+//            String username = jwtCore.getUsernameFromJwt(token);
 //
-//            if(jwt != null) {
-//                try {
-//                    username = jwtCore.getNameFromJwt(jwt);
-//                } catch (ExpiredJwtException expiredJwtException) {
+//            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+//                var userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(username);
 //
-//                }
+//                if (jwtCore.validateToken(token, userDetails)) {
+//                    var authToken = new UsernamePasswordAuthenticationToken(
+//                            userDetails, null, userDetails.getAuthorities());
 //
-//                if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-//                    userDetails = userDetailsService.loadUserByUsername(username);
-//                    usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null);
-//                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+//                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//                    SecurityContextHolder.getContext().setAuthentication(authToken);
 //                }
 //            }
-//        } catch (Exception exception) {
-//
 //        }
+//
 //        filterChain.doFilter(request, response);
 //    }
 //}

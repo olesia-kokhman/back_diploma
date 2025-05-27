@@ -7,8 +7,8 @@ import com.backenddiploma.mappers.StockInfoMapper;
 import com.backenddiploma.models.StockInfo;
 import com.backenddiploma.models.enums.StockTrend;
 import com.backenddiploma.repositories.StockInfoRepository;
-import com.backenddiploma.services.integrations.StockWidgetService;
-import com.backenddiploma.services.integrations.YahooTrendService;
+import com.backenddiploma.services.integrations.StockSyncService;
+import com.backenddiploma.services.integrations.YahooSyncService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,15 +19,15 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class StockInfoService {
-    private final YahooTrendService yahooTrendService;
-    private final StockWidgetService stockWidgetService;
+    private final YahooSyncService yahooSyncService;
+    private final StockSyncService stockSyncService;
     private final StockInfoMapper mapper;
     private final StockInfoRepository repository;
 
     @Transactional()
     public void fetchAndSaveAll() {
         repository.deleteAll();
-        Map<String, List<String>> trends = yahooTrendService.getTrends();
+        Map<String, List<String>> trends = yahooSyncService.getTrends();
         createStockInfo(trends.getOrDefault("gainers", Collections.emptyList()), StockTrend.UP) ;
         createStockInfo(trends.getOrDefault("losers", Collections.emptyList()), StockTrend.DOWN) ;
         createStockInfo(trends.getOrDefault("actives", Collections.emptyList()), StockTrend.ACTIVE) ;
@@ -37,7 +37,7 @@ public class StockInfoService {
     public void createStockInfo(List<String> trends, StockTrend trendType) { // internal request
 
         for(String trend: trends) {
-            StockInfoCreateDTO dto = stockWidgetService.getQuoteBySymbol(trend);
+            StockInfoCreateDTO dto = stockSyncService.getQuoteBySymbol(trend);
             StockInfo stockInfo = mapper.toEntity(dto, trendType);
             repository.save(stockInfo);
         }

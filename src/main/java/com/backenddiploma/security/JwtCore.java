@@ -13,20 +13,31 @@
 //    @Value("${app.secret}")
 //    private String secret;
 //
-//    @Value("{app.expiration}")
+//    @Value("${app.expiration}")
 //    private int lifetime;
 //
 //    public String generateToken(Authentication authentication) {
 //        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-//
-//        return Jwts.builder().subject((userDetails.getUsername())).issuedAt(new Date())
-//                .expiration(new Date((new Date().getTime() + lifetime)))
+//        return Jwts.builder()
+//                .setSubject(userDetails.getUsername())
+//                .claim("role", userDetails.getRole().name())
+//                .setIssuedAt(new Date())
+//                .setExpiration(new Date(System.currentTimeMillis() + lifetime))
 //                .signWith(SignatureAlgorithm.HS256, secret)
 //                .compact();
-//    };
+//    }
 //
-//    public String getNameFromJwt(String token) {
-//        return "jwt name"; // need to update
+//    public String getUsernameFromJwt(String token) {
+//        return Jwts.parser()
+//                .setSigningKey(secret)
+//                .parseClaimsJws(token)
+//                .getBody()
+//                .getSubject();
+//    }
+//
+//    public boolean validateToken(String token, UserDetailsImpl userDetails) {
+//        String username = getUsernameFromJwt(token);
+//        return username.equals(userDetails.getUsername());
 //    }
 //
 //

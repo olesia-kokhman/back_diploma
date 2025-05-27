@@ -8,7 +8,7 @@ import com.backenddiploma.dto.integrations.monobank.MonobankUserInfoDTO;
 import com.backenddiploma.dto.transaction.TransactionCreateDTO;
 import com.backenddiploma.mappers.AccountMapper;
 import com.backenddiploma.mappers.TransactionMapper;
-import com.backenddiploma.mappers.integrations.MonobankInfoMapper;
+import com.backenddiploma.mappers.MonobankMapper;
 import com.backenddiploma.models.Account;
 import com.backenddiploma.models.Category;
 import com.backenddiploma.models.Transaction;
@@ -29,7 +29,7 @@ import java.util.List;
 public class MonobankService {
 
     private final MonobankSyncService monobankSyncService;
-    private final MonobankInfoMapper monobankInfoMapper;
+    private final MonobankMapper monobankMapper;
 
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
@@ -51,7 +51,7 @@ public class MonobankService {
 
         if (accounts != null) {
             for (MonobankAccountDTO monobankAccountDTO : accounts) {
-                AccountCreateDTO accountDTO = monobankInfoMapper.convertAccountToAccountCreateDTO(monobankAccountDTO, user.getId());
+                AccountCreateDTO accountDTO = monobankMapper.convertAccountToAccountCreateDTO(monobankAccountDTO, user.getId());
                 Account account = accountMapper.toEntity(accountDTO, user);
                 accountRepository.save(account);
 
@@ -69,7 +69,7 @@ public class MonobankService {
                                         .orElseThrow(() -> new NotFoundException("User not found")));
 
 
-                        TransactionCreateDTO txCreateDTO = monobankInfoMapper.convertToTransactionCreateDTO(txDTO, user.getId(), account.getId(), category.getId());
+                        TransactionCreateDTO txCreateDTO = monobankMapper.convertToTransactionCreateDTO(txDTO, user.getId(), account.getId(), category.getId());
                         Transaction transaction = transactionMapper.toEntity(txCreateDTO, account, category, user);
                         transactionRepository.save(transaction);
                     }

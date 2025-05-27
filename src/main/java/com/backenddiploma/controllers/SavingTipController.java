@@ -17,15 +17,20 @@ public class SavingTipController {
 
     private final SavingTipService savingTipService;
 
+    @GetMapping("/random")
+    public ResponseEntity<SavingTipResponseDTO> getRandom() {
+        return ResponseEntity.ok(savingTipService.getRandomTip());
+    }
+
     @PostMapping
     public ResponseEntity<SavingTipResponseDTO> create(@RequestBody SavingTipCreateDTO dto) {
         return ResponseEntity.ok(savingTipService.create(dto));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<SavingTipResponseDTO> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(savingTipService.getById(id));
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<SavingTipResponseDTO> getById(@PathVariable Long id) {
+//        return ResponseEntity.ok(savingTipService.getById(id));
+//    }
 
     @PutMapping("/{id}")
     public ResponseEntity<SavingTipResponseDTO> update(@PathVariable Long id, @RequestBody SavingTipUpdateDTO dto) {

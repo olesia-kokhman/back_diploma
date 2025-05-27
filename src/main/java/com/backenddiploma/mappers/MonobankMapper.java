@@ -1,4 +1,4 @@
-package com.backenddiploma.mappers.integrations;
+package com.backenddiploma.mappers;
 
 import com.backenddiploma.dto.account.AccountCreateDTO;
 import com.backenddiploma.dto.integrations.monobank.MonobankAccountDTO;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Component
-public class MonobankInfoMapper {
+public class MonobankMapper {
     public AccountCreateDTO convertAccountToAccountCreateDTO(MonobankAccountDTO userInfoDTO, Long userId) {
         String currency = mapCurrency(userInfoDTO.getCurrencyCode());
         AccountCreateDTO accountCreateDTO = new AccountCreateDTO();

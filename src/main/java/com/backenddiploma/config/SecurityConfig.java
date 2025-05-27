@@ -23,9 +23,18 @@
 //@EnableWebSecurity
 //@RequiredArgsConstructor
 //public class SecurityConfig {
-//
-//    private final UserService userService;
 //    private final TokenFilter tokenFilter;
+//
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        return http.csrf(csrf -> csrf.disable())
+//                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers("/auth/**").permitAll()
+//                        .anyRequest().authenticated())
+//                .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
+//                .build();
+//    }
 //
 //    @Bean
 //    public PasswordEncoder passwordEncoder() {
@@ -33,26 +42,7 @@
 //    }
 //
 //    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-//        return authenticationConfiguration.getAuthenticationManager();
-//    }
-//
-//    @Bean
-//    public AuthenticationManagerBuilder configureAuthenticationManagerBuilder(
-//            AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-//        authenticationManagerBuilder.userDetailsService(userService).passwordEncoder(passwordEncoder());
-//        return authenticationManagerBuilder;
-//    }
-//
-//    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-//        httpSecurity.csrf(AbstractHttpConfigurer::disable)
-//                .exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(
-//                        new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/auth/**").permitAll()
-//                        .requestMatchers("/secured/user").fullyAuthenticated()
-//                        .anyRequest().permitAll())
-//                .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
-//        return httpSecurity.build();
+//    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+//        return config.getAuthenticationManager();
 //    }
 //}

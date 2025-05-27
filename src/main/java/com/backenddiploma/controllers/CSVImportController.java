@@ -1,4 +1,4 @@
-package com.backenddiploma.controllers.security;
+package com.backenddiploma.controllers;
 
 import com.backenddiploma.services.CSVImportService;
 import lombok.RequiredArgsConstructor;

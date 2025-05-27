@@ -11,7 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @RequiredArgsConstructor
-public class StockWidgetService {
+public class StockSyncService {
 
     private final ObjectMapper objectMapper;
     private WebClient webClient;

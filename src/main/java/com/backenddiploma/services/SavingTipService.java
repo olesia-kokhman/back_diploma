@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.backenddiploma.config.exceptions.NotFoundException;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,6 +21,20 @@ public class SavingTipService {
 
     private final SavingTipRepository savingTipRepository;
     private final SavingTipMapper savingTipMapper;
+
+    @Transactional
+    public SavingTipResponseDTO getRandomTip() {
+        List<SavingTip> tips = savingTipRepository.findAll();
+
+        if(tips.isEmpty()) {
+            throw new NotFoundException("Tips are not available");
+        }
+
+        Random random = new Random();
+
+        SavingTip savingTip = tips.get(random.nextInt(tips.size()));
+        return savingTipMapper.toResponse(savingTip);
+    }
 
     @Transactional
     public SavingTipResponseDTO create(SavingTipCreateDTO dto) {
