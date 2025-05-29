@@ -54,8 +54,7 @@ public class TransactionController {
 
     @PostMapping
     public ResponseEntity<TransactionResponseDTO> create(
-            @RequestBody TransactionCreateDTO dto,
-            @RequestParam Long userId
+            @RequestBody TransactionCreateDTO dto
     ) {
         TransactionResponseDTO created = transactionService.create(dto);
         return ResponseEntity.ok(created);

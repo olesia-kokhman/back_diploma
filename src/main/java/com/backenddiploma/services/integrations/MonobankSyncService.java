@@ -1,5 +1,6 @@
 package com.backenddiploma.services.integrations;
 
+import com.backenddiploma.dto.integrations.monobank.MonobankExchangeRateDTO;
 import com.backenddiploma.dto.integrations.monobank.MonobankTransactionDTO;
 import com.backenddiploma.dto.integrations.monobank.MonobankUserInfoDTO;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,6 +53,20 @@ public class MonobankSyncService {
                                     "Error getting transactions from Monobank API: HTTP status code: " + response.statusCode() +
                                             ", body response: " + errorBody)));
                 })
-                .bodyToMono(new ParameterizedTypeReference<List<MonobankTransactionDTO>>() {});
+                .bodyToMono(new ParameterizedTypeReference<>() {});
     }
+
+    public Mono<List<MonobankExchangeRateDTO>> getCurrencyRates() {
+        return webClient.get()
+                .uri("/bank/currency")
+                .retrieve()
+                .onStatus(status -> !status.equals(HttpStatus.OK), response -> {
+                    return response.bodyToMono(String.class)
+                            .flatMap(errorBody -> Mono.error(new RuntimeException(
+                                    "Error getting currency rates from Monobank API: HTTP status code: " + response.statusCode() +
+                                            ", body response: " + errorBody)));
+                })
+                .bodyToMono(new ParameterizedTypeReference<>() {});
+    }
+
 }
