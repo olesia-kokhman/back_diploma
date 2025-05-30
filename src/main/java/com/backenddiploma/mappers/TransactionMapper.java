@@ -58,6 +58,8 @@ public class TransactionMapper {
         response.setCurrency(transaction.getCurrency());
         response.setDescription(transaction.getDescription());
         response.setAccountId(transaction.getAccount().getId());
+        response.setAccountName(transaction.getAccount().getName());
+        response.setCategoryName(transaction.getCategory().getName());
         response.setCategoryId(transaction.getCategory() != null ? transaction.getCategory().getId() : null);
         response.setUserId(transaction.getUser() != null ? transaction.getUser().getId() : null);
         response.setTransferredAt(transaction.getTransferredAt());

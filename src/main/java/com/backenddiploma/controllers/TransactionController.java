@@ -21,6 +21,29 @@ public class TransactionController {
 
     private final TransactionService transactionService;
 
+    @GetMapping("/all")
+    public ResponseEntity<Page<TransactionResponseDTO>> getTransactions(
+            @RequestParam Long userId,
+            @RequestParam(required = false) List<Long> categoryIds,
+            @RequestParam(required = false) List<Long> accountIds,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "transferredAt") String sortBy,
+            @RequestParam(defaultValue = "true") boolean direction,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size
+    ) {
+        Page<TransactionResponseDTO> transactions = transactionService.getFilteredAndSortedTransactions(
+                userId, categoryIds, accountIds, startDate, endDate, keyword, sortBy, direction, page, size);
+
+        if (transactions.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(transactions);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<TransactionResponseDTO> getById(
             @PathVariable Long id,

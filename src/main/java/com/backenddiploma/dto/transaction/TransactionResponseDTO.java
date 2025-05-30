@@ -14,6 +14,8 @@ public class TransactionResponseDTO {
     private Currency currency;
     private String description;
     private Long accountId;
+    private String categoryName;
+    private String accountName;
     private Long categoryId;
     private Long userId;
     private LocalDateTime transferredAt;

@@ -62,7 +62,7 @@ public class AccountFactoryService {
         }
 
         account.setName(request.getName());
-        account.setCurrency(Currency.valueOf(request.getCurrency()));
+        account.setCurrency(request.getCurrency());
         account.setBalance(request.getBalance());
         account.setMain(request.isMain());
         account.setUser(user);

@@ -1,6 +1,7 @@
 package com.backenddiploma.dto.account;
 
 import com.backenddiploma.models.enums.AccountType;
+import com.backenddiploma.models.enums.Currency;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -9,7 +10,7 @@ import java.time.LocalDate;
 public class AccountCreateDTO {
     private String name;
     private AccountType accountType;
-    private String currency;
+    private Currency currency;
     private double balance;
     private boolean isMain;
     private Long userId;

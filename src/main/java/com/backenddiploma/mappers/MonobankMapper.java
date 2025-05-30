@@ -19,7 +19,7 @@ import java.time.ZoneId;
 @Component
 public class MonobankMapper {
     public AccountCreateDTO convertAccountToAccountCreateDTO(MonobankAccountDTO userInfoDTO, Long userId) {
-        String currency = mapCurrency(userInfoDTO.getCurrencyCode());
+        Currency currency = mapCurrency(userInfoDTO.getCurrencyCode());
         AccountCreateDTO accountCreateDTO = new AccountCreateDTO();
         accountCreateDTO.setName("Monobank " + currency + ", " + userInfoDTO.getType().toString());
         accountCreateDTO.setAccountType(AccountType.BANK_ACCOUNT);
@@ -32,7 +32,7 @@ public class MonobankMapper {
 
     public AccountCreateDTO convertJarToAccountCreateDTO(MonobankJarDTO jarDTO, Long userId) {
         AccountCreateDTO accountCreateDTO = new AccountCreateDTO();
-        String currency = mapCurrency(jarDTO.getCurrencyCode());
+        Currency currency = mapCurrency(jarDTO.getCurrencyCode());
         accountCreateDTO.setName("Monobank " + currency + ", " + jarDTO.getTitle());
         accountCreateDTO.setAccountType(AccountType.JAR);
         accountCreateDTO.setMain(false);
@@ -55,7 +55,7 @@ public class MonobankMapper {
         } else {
             transactionCreateDTO.setTransactionType(TransactionType.INCOME);
         }
-        transactionCreateDTO.setAmount((float)transactionDTO.getOperationAmount() / 100);
+        transactionCreateDTO.setAmount((double) (transactionDTO.getOperationAmount() / 100));
         transactionCreateDTO.setUserId(userId);
         transactionCreateDTO.setDescription(transactionDTO.getDescription());
         transactionCreateDTO.setCurrency(mapCurrency(transactionDTO.getCurrencyCode()));
@@ -68,16 +68,16 @@ public class MonobankMapper {
         return transactionCreateDTO;
     }
 
-    private String mapCurrency(int currencyCode) {
+    private Currency mapCurrency(int currencyCode) {
         switch (currencyCode) {
             case 980:
-                return Currency.UAH.toString();
+                return Currency.UAH;
             case 840:
-                return Currency.USD.toString();
+                return Currency.USD;
             case 978:
-                return Currency.EUR.toString();
+                return Currency.EUR;
             default:
-                return Currency.UAH.toString();
+                return Currency.UAH;
         }
 
     }
