@@ -29,23 +29,6 @@ public class TransactionAnalyticsController {
         return transactionAnalyticsService.getAllTransactionsPerCurrentMonth(userId, TransactionType.INCOME);
     }
 
-    @GetMapping("/income-expense")
-    public ChartDataResponseDTO getIncomeExpensePerHalfYear(@RequestParam Long userId) {
-        return transactionAnalyticsService.getIncomeExpensePerHalfYear(userId);
-    }
-
-
-//    @GetMapping("/income-expense")
-//    public ChartDataResponseDTO getIncomeExpensePerHalfYear(@RequestParam Long userId,
-//                                                            @RequestParam PeriodType groupBy,
-//                                                            @RequestParam(required = false) Long accountId,
-//                                                            @RequestParam(required = false) LocalDate start,
-//                                                            @RequestParam(required = false) LocalDate end,
-//                                                            @RequestParam(required = false) boolean incomeOnly,
-//                                                            @RequestParam(required = false) boolean expenseOnly) {
-//        return transactionAnalyticsService.getIncomeExpense(userId, accountId, start, end, groupBy, incomeOnly, expenseOnly);
-//    }
-
     @GetMapping("/general-balance")
     public ChartDataResponseDTO getGeneralBalancePerHalfYear(@RequestParam Long userId,
                                                              @RequestParam PeriodType groupBy,
@@ -54,6 +37,18 @@ public class TransactionAnalyticsController {
                                                              @RequestParam(required = false) LocalDate end) {
         return transactionAnalyticsService.getGeneralBalance(userId, accountId, start, end, groupBy);
     }
+
+    @GetMapping("/income-expense")
+    public ChartDataResponseDTO getIncomeExpensePerHalfYear(@RequestParam Long userId,
+                                                            @RequestParam PeriodType groupBy,
+                                                            @RequestParam(required = false) Long accountId,
+                                                            @RequestParam(required = false) LocalDate start,
+                                                            @RequestParam(required = false) LocalDate end,
+                                                            @RequestParam(required = false, defaultValue = "false") boolean incomeOnly,
+                                                            @RequestParam(required = false, defaultValue = "false") boolean expenseOnly) {
+        return transactionAnalyticsService.getIncomeExpense(userId, accountId, start, end, groupBy, incomeOnly, expenseOnly);
+    }
+
 
 
 

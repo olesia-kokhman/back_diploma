@@ -56,10 +56,10 @@ public class TransactionAnalyticsService {
 
             AllExpensesCategoryDTO categoryDTO = new AllExpensesCategoryDTO();
             categoryDTO.setCategoryTitle(category.getName());
-            //categoryDTO.setColor(category.getColor());
-            //categoryDTO.setIcon(category.getIcon());
+            categoryDTO.setColor(category.getColor());
+            categoryDTO.setIconUrl(category.getIconUrl());
             categoryDTO.setAmount(categorySum);
-            //categoryDTO.setPercentage(total > 0 ? (categorySum / total * 100.0) : 0.0);
+            categoryDTO.setPercentage(total > 0 ? (categorySum / total * 100.0) : 0.0);
             result.add(categoryDTO);
         }
 
@@ -72,28 +72,118 @@ public class TransactionAnalyticsService {
         return chartDataResponseDTO;
     }
 
-    public ChartDataResponseDTO getIncomeExpensePerHalfYear(Long userId) {
+    public ChartDataResponseDTO getIncomeExpense(Long userId,
+                                                 Long accountId,
+                                                 LocalDate start,
+                                                 LocalDate end,
+                                                 PeriodType groupBy,
+                                                 boolean incomeOnly,
+                                                 boolean expenseOnly) {
+
+
+        if (groupBy == null) {
+            groupBy = PeriodType.MONTHLY;
+        }
+
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime sixMonthsAgo = now.minusMonths(5).withDayOfMonth(1).toLocalDate().atStartOfDay();
+
+
+        LocalDateTime startDateTime;
+        LocalDateTime endDateTime;
+
+        if (start == null || end == null) {
+
+            startDateTime = now.minusMonths(5).withDayOfMonth(1).toLocalDate().atStartOfDay();
+            endDateTime = now;
+        } else {
+
+            startDateTime = start.atStartOfDay();
+            endDateTime = end.atTime(23, 59, 59);
+        }
+
 
         List<Transaction> transactions = transactionRepository
-                .findAllByUserIdAndTransferredAtBetween(userId, sixMonthsAgo, now);
+                .findAllByUserIdAndTransferredAtBetween(userId, startDateTime, endDateTime)
+                .stream()
+                .filter(tx -> accountId == null || tx.getAccount().getId().equals(accountId))
+                .filter(tx -> {
+                    if (incomeOnly) {
+                        return tx.getTransactionType() == TransactionType.INCOME;
+                    } else if (expenseOnly) {
+                        return tx.getTransactionType() == TransactionType.EXPENSE;
+                    }
+                    return true;
+                })
+                .toList();
 
-        Map<String, List<Transaction>> groupedByMonth = transactions.stream()
-                .collect(Collectors.groupingBy(tx -> tx.getTransferredAt().getMonth().toString()));
+
+        Map<String, List<Transaction>> grouped;
+
+        switch (groupBy) {
+            case DAILY:
+                grouped = transactions.stream().collect(Collectors.groupingBy(tx -> tx.getTransferredAt().toLocalDate().toString()));
+                break;
+            case WEEKLY:
+                grouped = transactions.stream().collect(Collectors.groupingBy(tx -> {
+                    LocalDateTime date = tx.getTransferredAt();
+                    return date.getYear() + "-W" + date.get(java.time.temporal.WeekFields.ISO.weekOfWeekBasedYear());
+                }));
+                break;
+            case MONTHLY:
+                grouped = transactions.stream().collect(Collectors.groupingBy(tx -> {
+                    LocalDateTime date = tx.getTransferredAt();
+                    return date.getYear() + "-" + String.format("%02d", date.getMonthValue());
+                }));
+                break;
+            case YEARLY:
+                grouped = transactions.stream().collect(Collectors.groupingBy(tx -> String.valueOf(tx.getTransferredAt().getYear())));
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported groupBy: " + groupBy);
+        }
 
         List<IChartDTO> result = new ArrayList<>();
 
-        for (int i = 0; i < 6; i++) {
-            LocalDateTime target = now.minusMonths(i).withDayOfMonth(1);
-            String monthName = target.getMonth().toString();
+        int periods = 6;
 
-            List<Transaction> monthTransactions = groupedByMonth.getOrDefault(monthName, List.of());
+        for (int i = 0; i < periods; i++) {
+            LocalDateTime target;
+
+            String periodKey;
+            String periodLabel;
+
+            switch (groupBy) {
+                case DAILY:
+                    target = now.minusDays(i);
+                    periodKey = target.toLocalDate().toString();
+                    periodLabel = periodKey;
+                    break;
+                case WEEKLY:
+                    target = now.minusWeeks(i);
+                    int week = target.get(java.time.temporal.WeekFields.ISO.weekOfWeekBasedYear());
+                    periodKey = target.getYear() + "-W" + week;
+                    periodLabel = "Week " + week + ", " + target.getYear();
+                    break;
+                case MONTHLY:
+                    target = now.minusMonths(i).withDayOfMonth(1);
+                    periodKey = target.getYear() + "-" + String.format("%02d", target.getMonthValue());
+                    periodLabel = target.getMonth().name().substring(0,1) + target.getMonth().name().substring(1).toLowerCase() + " " + target.getYear();
+                    break;
+                case YEARLY:
+                    target = now.minusYears(i);
+                    periodKey = String.valueOf(target.getYear());
+                    periodLabel = periodKey;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported groupBy: " + groupBy);
+            }
+
+            List<Transaction> periodTransactions = grouped.getOrDefault(periodKey, List.of());
 
             double incomeSum = 0;
             double expenseSum = 0;
 
-            for (Transaction transaction : monthTransactions) {
+            for (Transaction transaction : periodTransactions) {
                 Double amountInUah = exchanger.convert(transaction.getAmount(), transaction.getCurrency(), Currency.UAH);
                 if (amountInUah == null) continue;
 
@@ -104,14 +194,13 @@ public class TransactionAnalyticsService {
                 }
             }
 
-            result.add(new IncomeExpenseDTO((target.getMonth().name().substring(0, 1)
-                    + target.getMonth().name().substring(1).toLowerCase()), expenseSum, incomeSum));
+            result.add(new IncomeExpenseDTO(periodLabel, expenseSum, incomeSum));
         }
 
         Collections.reverse(result);
 
         ChartDataResponseDTO chart = new ChartDataResponseDTO();
-        chart.setChartTitle("Income & Expenses per last 6 months");
+        chart.setChartTitle("Income & Expenses per last 6 periods");
         chart.setChartData(result);
         return chart;
     }
@@ -218,9 +307,5 @@ public class TransactionAnalyticsService {
         chart.setChartData(result);
         return chart;
     }
-
-
-
-
 
 }
