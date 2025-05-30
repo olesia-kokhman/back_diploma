@@ -5,7 +5,7 @@ import com.backenddiploma.dto.account.AccountResponseDTO;
 import com.backenddiploma.dto.account.AccountUpdateDTO;
 import com.backenddiploma.config.exceptions.NotFoundException;
 import com.backenddiploma.mappers.AccountMapper;
-import com.backenddiploma.models.Account;
+import com.backenddiploma.models.accounts.Account;
 import com.backenddiploma.models.User;
 import com.backenddiploma.repositories.AccountRepository;
 import com.backenddiploma.repositories.UserRepository;

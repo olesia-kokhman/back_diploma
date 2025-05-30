@@ -1,5 +1,6 @@
 package com.backenddiploma.models;
 
+import com.backenddiploma.models.accounts.Account;
 import com.backenddiploma.models.enums.Currency;
 import com.backenddiploma.models.enums.TransactionType;
 import jakarta.persistence.*;

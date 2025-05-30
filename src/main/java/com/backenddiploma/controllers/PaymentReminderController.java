@@ -17,6 +17,11 @@ public class PaymentReminderController {
 
     private final PaymentReminderService paymentReminderService;
 
+    @GetMapping("/nearest")
+    public ResponseEntity<PaymentReminderResponseDTO> getNearest(@RequestParam Long userId) {
+        return ResponseEntity.ok(paymentReminderService.getNearest(userId));
+    }
+
     @PostMapping
     public ResponseEntity<PaymentReminderResponseDTO> create(@RequestBody PaymentReminderCreateDTO dto) {
         return ResponseEntity.ok(paymentReminderService.create(dto));
@@ -33,7 +38,7 @@ public class PaymentReminderController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<PaymentReminderResponseDTO>> getByUserId(@PathVariable Long userId) {
+    public ResponseEntity<List<PaymentReminderResponseDTO>> getAllByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(paymentReminderService.getByUserId(userId));
     }
 

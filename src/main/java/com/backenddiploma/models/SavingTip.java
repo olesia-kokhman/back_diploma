@@ -19,6 +19,9 @@ public class SavingTip {
     @Column(nullable = false, length = 255)
     private String description;
 
+    @Column(name = "description_uk")
+    private String descriptionUK;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

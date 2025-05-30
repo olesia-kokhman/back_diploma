@@ -37,6 +37,15 @@ public class Category {
     @Column(name = "end_mcc")
     private int endMcc;
 
+    @Column(name = "icon_url")
+    private String iconUrl;
+
+    @Column(name = "color")
+    private String color;
+
+    @Column(name = "name_uk")
+    private String nameUK;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

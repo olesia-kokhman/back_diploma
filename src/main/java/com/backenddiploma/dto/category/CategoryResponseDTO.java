@@ -12,6 +12,8 @@ public class CategoryResponseDTO {
     private String name;
     private BudgetType type;
     private boolean isDefault;
+    private String iconUrl;
+    private String color;
     private Long userId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

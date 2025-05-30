@@ -11,5 +11,4 @@ public class UserSettingsUpdateDTO {
     private String defaultCurrency;
     private String dateFormat;
     private String timeFormat;
-    private Theme theme;
 }

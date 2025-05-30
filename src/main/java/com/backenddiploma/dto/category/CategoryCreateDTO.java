@@ -10,4 +10,6 @@ public class CategoryCreateDTO {
     private BudgetType type;
     private boolean isDefault;
     private Long userId;
+    private String iconUrl;
+    private String color;
 }

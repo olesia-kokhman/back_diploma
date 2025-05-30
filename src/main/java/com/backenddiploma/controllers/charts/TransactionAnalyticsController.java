@@ -1,6 +1,7 @@
 package com.backenddiploma.controllers.charts;
 
 import com.backenddiploma.dto.charts.ChartDataResponseDTO;
+import com.backenddiploma.dto.charts.PeriodType;
 import com.backenddiploma.models.enums.TransactionType;
 import com.backenddiploma.services.charts.TransactionAnalyticsService;
 import lombok.RequiredArgsConstructor;
@@ -33,12 +34,25 @@ public class TransactionAnalyticsController {
         return transactionAnalyticsService.getIncomeExpensePerHalfYear(userId);
     }
 
+
+//    @GetMapping("/income-expense")
+//    public ChartDataResponseDTO getIncomeExpensePerHalfYear(@RequestParam Long userId,
+//                                                            @RequestParam PeriodType groupBy,
+//                                                            @RequestParam(required = false) Long accountId,
+//                                                            @RequestParam(required = false) LocalDate start,
+//                                                            @RequestParam(required = false) LocalDate end,
+//                                                            @RequestParam(required = false) boolean incomeOnly,
+//                                                            @RequestParam(required = false) boolean expenseOnly) {
+//        return transactionAnalyticsService.getIncomeExpense(userId, accountId, start, end, groupBy, incomeOnly, expenseOnly);
+//    }
+
     @GetMapping("/general-balance")
     public ChartDataResponseDTO getGeneralBalancePerHalfYear(@RequestParam Long userId,
+                                                             @RequestParam PeriodType groupBy,
                                                              @RequestParam(required = false) Long accountId,
                                                              @RequestParam(required = false) LocalDate start,
                                                              @RequestParam(required = false) LocalDate end) {
-        return transactionAnalyticsService.getGeneralBalance(userId, accountId, start, end);
+        return transactionAnalyticsService.getGeneralBalance(userId, accountId, start, end, groupBy);
     }
 
 

@@ -5,7 +5,7 @@ import com.backenddiploma.dto.transaction.TransactionResponseDTO;
 import com.backenddiploma.dto.transaction.TransactionUpdateDTO;
 import com.backenddiploma.config.exceptions.NotFoundException;
 import com.backenddiploma.mappers.TransactionMapper;
-import com.backenddiploma.models.Account;
+import com.backenddiploma.models.accounts.Account;
 import com.backenddiploma.models.Category;
 import com.backenddiploma.models.Transaction;
 import com.backenddiploma.models.User;

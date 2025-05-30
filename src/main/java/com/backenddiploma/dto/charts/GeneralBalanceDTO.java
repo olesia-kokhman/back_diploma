@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class GeneralBalanceDTO implements IChartDTO {
-    private String month;
+    private String date;
     private double amount;
 }

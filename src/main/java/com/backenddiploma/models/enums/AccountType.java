@@ -4,9 +4,9 @@ public enum AccountType {
     BANK_ACCOUNT,
     JAR,
     CASH,
-    DEBT,
+    INVESTMENT,
     REAL_ESTATE,
     TRANSPORT,
-    CREDIT
+    DEBT
 }
 

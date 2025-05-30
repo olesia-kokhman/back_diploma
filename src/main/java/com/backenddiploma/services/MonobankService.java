@@ -9,7 +9,7 @@ import com.backenddiploma.dto.transaction.TransactionCreateDTO;
 import com.backenddiploma.mappers.AccountMapper;
 import com.backenddiploma.mappers.TransactionMapper;
 import com.backenddiploma.mappers.MonobankMapper;
-import com.backenddiploma.models.Account;
+import com.backenddiploma.models.accounts.Account;
 import com.backenddiploma.models.Category;
 import com.backenddiploma.models.Transaction;
 import com.backenddiploma.models.User;

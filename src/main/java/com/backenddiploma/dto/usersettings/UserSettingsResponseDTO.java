@@ -15,7 +15,6 @@ public class UserSettingsResponseDTO {
     private String defaultCurrency;
     private String dateFormat;
     private String timeFormat;
-    private Theme theme;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

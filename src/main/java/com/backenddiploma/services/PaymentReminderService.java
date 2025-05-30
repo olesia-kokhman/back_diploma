@@ -24,6 +24,13 @@ public class PaymentReminderService {
     private final UserRepository userRepository;
     private final PaymentReminderMapper paymentReminderMapper;
 
+    @Transactional(readOnly = true)
+    public PaymentReminderResponseDTO getNearest(Long userId) {
+        PaymentReminder reminder = paymentReminderRepository.findTopByUserIdOrderByDueDateAsc(userId);
+        return paymentReminderMapper.toResponse(reminder);
+    }
+
+
     @Transactional
     public PaymentReminderResponseDTO create(PaymentReminderCreateDTO dto) {
         User user = userRepository.findById(dto.getUserId())

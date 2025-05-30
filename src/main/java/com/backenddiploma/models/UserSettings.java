@@ -34,10 +34,6 @@ public class UserSettings {
     @Column(name = "time_format", nullable = false, length = 0)
     private String timeFormat;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Theme theme;
-
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

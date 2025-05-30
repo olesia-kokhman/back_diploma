@@ -1,5 +1,6 @@
-package com.backenddiploma.models;
+package com.backenddiploma.models.accounts;
 
+import com.backenddiploma.models.User;
 import com.backenddiploma.models.enums.AccountType;
 import com.backenddiploma.models.enums.Currency;
 import jakarta.persistence.*;
@@ -12,6 +13,8 @@ import java.time.LocalDateTime;
 @Table(name = "accounts")
 @Data
 @NoArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "account_type", discriminatorType = DiscriminatorType.STRING)
 public class Account {
 
     @Id
@@ -20,10 +23,6 @@ public class Account {
 
     @Column(nullable = false, length = 255)
     private String name;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "account_type", nullable = false, length = 255)
-    private AccountType accountType;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 255)

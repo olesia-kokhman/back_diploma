@@ -4,6 +4,7 @@ import com.backenddiploma.dto.transaction.TransactionCreateDTO;
 import com.backenddiploma.dto.transaction.TransactionResponseDTO;
 import com.backenddiploma.dto.transaction.TransactionUpdateDTO;
 import com.backenddiploma.models.*;
+import com.backenddiploma.models.accounts.Account;
 import org.springframework.stereotype.Component;
 
 import com.backenddiploma.models.enums.Currency;

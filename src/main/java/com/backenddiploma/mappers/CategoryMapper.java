@@ -15,6 +15,8 @@ public class CategoryMapper {
         category.setName(dto.getName());
         category.setType(dto.getType());
         category.setDefault(dto.isDefault());
+        category.setIconUrl(dto.getIconUrl());
+        category.setColor(dto.getColor());
         category.setUser(user);
         return category;
     }
@@ -29,6 +31,12 @@ public class CategoryMapper {
         if (dto.getIsDefault() != null) {
             category.setDefault(dto.getIsDefault());
         }
+        if (dto.getIconUrl() != null) {
+            category.setIconUrl(dto.getIconUrl());
+        }
+        if(dto.getColor() != null) {
+            category.setColor(dto.getColor());
+        }
     }
 
     public CategoryResponseDTO toResponse(Category category) {
@@ -37,6 +45,8 @@ public class CategoryMapper {
         response.setName(category.getName());
         response.setType(category.getType());
         response.setDefault(category.isDefault());
+        response.setIconUrl(category.getIconUrl());
+        response.setColor(category.getColor());
         response.setUserId(category.getUser() != null ? category.getUser().getId() : null);
         response.setCreatedAt(category.getCreatedAt());
         response.setUpdatedAt(category.getUpdatedAt());

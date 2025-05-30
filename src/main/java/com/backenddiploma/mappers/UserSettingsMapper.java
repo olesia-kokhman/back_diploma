@@ -18,7 +18,6 @@ public class UserSettingsMapper {
         settings.setDefaultCurrency(Currency.valueOf(dto.getDefaultCurrency()));
         settings.setDateFormat(dto.getDateFormat());
         settings.setTimeFormat(dto.getTimeFormat());
-        settings.setTheme(dto.getTheme());
         return settings;
     }
 
@@ -35,9 +34,6 @@ public class UserSettingsMapper {
         if (dto.getTimeFormat() != null) {
             settings.setTimeFormat(dto.getTimeFormat());
         }
-        if (dto.getTheme() != null) {
-            settings.setTheme(dto.getTheme());
-        }
     }
 
     public UserSettingsResponseDTO toResponse(UserSettings settings) {
@@ -48,7 +44,6 @@ public class UserSettingsMapper {
         response.setDefaultCurrency(settings.getDefaultCurrency().toString());
         response.setDateFormat(settings.getDateFormat());
         response.setTimeFormat(settings.getTimeFormat());
-        response.setTheme(settings.getTheme());
         response.setCreatedAt(settings.getCreatedAt());
         response.setUpdatedAt(settings.getUpdatedAt());
         return response;
