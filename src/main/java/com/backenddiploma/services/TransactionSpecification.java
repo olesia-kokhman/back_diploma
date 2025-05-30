@@ -46,13 +46,13 @@ public class TransactionSpecification {
             if (startDate != null && endDate != null) {
                 LocalDateTime startDateTime = startDate.atStartOfDay();
                 LocalDateTime endDateTime = endDate.atTime(23, 59, 59, 999_999_999);
-                return cb.between(root.get("dateAndTime"), startDateTime, endDateTime);
+                return cb.between(root.get("transferredAt"), startDateTime, endDateTime);
             } else if (startDate != null) {
                 LocalDateTime startDateTime = startDate.atStartOfDay();
-                return cb.greaterThanOrEqualTo(root.get("dateAndTime"), startDateTime);
+                return cb.greaterThanOrEqualTo(root.get("transferredAt"), startDateTime);
             } else if (endDate != null) {
                 LocalDateTime endDateTime = endDate.atTime(23, 59, 59, 999_999_999);
-                return cb.lessThanOrEqualTo(root.get("dateAndTime"), endDateTime);
+                return cb.lessThanOrEqualTo(root.get("transferredAt"), endDateTime);
             } else {
                 return cb.conjunction();
             }
@@ -74,7 +74,7 @@ public class TransactionSpecification {
             return cb.or(
                     cb.like(cb.lower(root.get("description")), likePattern),
                     cb.like(cb.lower(root.get("amount").as(String.class)), likePattern),
-                    cb.like(cb.lower(root.get("dateAndTime").as(String.class)), likePattern),
+                    cb.like(cb.lower(root.get("transferredAt").as(String.class)), likePattern),
                     cb.like(cb.lower(categoryJoin.get("name")), likePattern),
                     cb.like(cb.lower(accountJoin.get("name")), likePattern)
             );

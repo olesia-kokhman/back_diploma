@@ -1,5 +1,6 @@
 package com.backenddiploma.dto.transaction;
 
+import com.backenddiploma.models.enums.Currency;
 import com.backenddiploma.models.enums.TransactionType;
 import lombok.Data;
 
@@ -10,7 +11,7 @@ public class TransactionResponseDTO {
     private Long id;
     private TransactionType transactionType;
     private double amount;
-    private String currency;
+    private Currency currency;
     private String description;
     private Long accountId;
     private Long categoryId;

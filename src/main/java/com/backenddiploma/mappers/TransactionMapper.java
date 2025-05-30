@@ -16,7 +16,7 @@ public class TransactionMapper {
         Transaction transaction = new Transaction();
         transaction.setTransactionType(request.getTransactionType());
         transaction.setAmount(request.getAmount());
-        transaction.setCurrency(Currency.valueOf(request.getCurrency()));
+        transaction.setCurrency(request.getCurrency());
         transaction.setDescription(request.getDescription());
         transaction.setAccount(account);
         transaction.setCategory(category);
@@ -33,7 +33,7 @@ public class TransactionMapper {
             transaction.setAmount(request.getAmount());
         }
         if (request.getCurrency() != null) {
-            transaction.setCurrency(Currency.valueOf(request.getCurrency()));
+            transaction.setCurrency(request.getCurrency());
         }
         if (request.getDescription() != null) {
             transaction.setDescription(request.getDescription());
@@ -55,7 +55,7 @@ public class TransactionMapper {
         response.setId(transaction.getId());
         response.setTransactionType(transaction.getTransactionType());
         response.setAmount(transaction.getAmount());
-        response.setCurrency(transaction.getCurrency().toString());
+        response.setCurrency(transaction.getCurrency());
         response.setDescription(transaction.getDescription());
         response.setAccountId(transaction.getAccount().getId());
         response.setCategoryId(transaction.getCategory() != null ? transaction.getCategory().getId() : null);

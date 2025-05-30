@@ -32,10 +32,10 @@ public class Category {
     private boolean isDefault;
 
     @Column(name = "start_mcc")
-    private int startMcc;
+    private Integer startMcc;
 
     @Column(name = "end_mcc")
-    private int endMcc;
+    private Integer endMcc;
 
     @Column(name = "icon_url")
     private String iconUrl;

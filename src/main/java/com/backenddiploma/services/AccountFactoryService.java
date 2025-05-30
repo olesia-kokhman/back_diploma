@@ -66,7 +66,6 @@ public class AccountFactoryService {
         account.setBalance(request.getBalance());
         account.setMain(request.isMain());
         account.setUser(user);
-
         return account;
     }
 }
