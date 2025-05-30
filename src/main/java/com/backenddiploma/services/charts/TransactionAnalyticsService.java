@@ -72,6 +72,139 @@ public class TransactionAnalyticsService {
         return chartDataResponseDTO;
     }
 
+//    public ChartDataResponseDTO getIncomeExpense(Long userId,
+//                                                 Long accountId,
+//                                                 LocalDate start,
+//                                                 LocalDate end,
+//                                                 PeriodType groupBy,
+//                                                 boolean incomeOnly,
+//                                                 boolean expenseOnly) {
+//
+//
+//        if (groupBy == null) {
+//            groupBy = PeriodType.MONTHLY;
+//        }
+//
+//        LocalDateTime now = LocalDateTime.now();
+//
+//
+//        LocalDateTime startDateTime;
+//        LocalDateTime endDateTime;
+//
+//        if (start == null || end == null) {
+//
+//            startDateTime = now.minusMonths(5).withDayOfMonth(1).toLocalDate().atStartOfDay();
+//            endDateTime = now;
+//        } else {
+//
+//            startDateTime = start.atStartOfDay();
+//            endDateTime = end.atTime(23, 59, 59);
+//        }
+//
+//
+//        List<Transaction> transactions = transactionRepository
+//                .findAllByUserIdAndTransferredAtBetween(userId, startDateTime, endDateTime)
+//                .stream()
+//                .filter(tx -> accountId == null || tx.getAccount().getId().equals(accountId))
+//                .filter(tx -> {
+//                    if (incomeOnly) {
+//                        return tx.getTransactionType() == TransactionType.INCOME;
+//                    } else if (expenseOnly) {
+//                        return tx.getTransactionType() == TransactionType.EXPENSE;
+//                    }
+//                    return true;
+//                })
+//                .toList();
+//
+//
+//        Map<String, List<Transaction>> grouped;
+//
+//        switch (groupBy) {
+//            case DAILY:
+//                grouped = transactions.stream().collect(Collectors.groupingBy(tx -> tx.getTransferredAt().toLocalDate().toString()));
+//                break;
+//            case WEEKLY:
+//                grouped = transactions.stream().collect(Collectors.groupingBy(tx -> {
+//                    LocalDateTime date = tx.getTransferredAt();
+//                    return date.getYear() + "-W" + date.get(java.time.temporal.WeekFields.ISO.weekOfWeekBasedYear());
+//                }));
+//                break;
+//            case MONTHLY:
+//                grouped = transactions.stream().collect(Collectors.groupingBy(tx -> {
+//                    LocalDateTime date = tx.getTransferredAt();
+//                    return date.getYear() + "-" + String.format("%02d", date.getMonthValue());
+//                }));
+//                break;
+//            case YEARLY:
+//                grouped = transactions.stream().collect(Collectors.groupingBy(tx -> String.valueOf(tx.getTransferredAt().getYear())));
+//                break;
+//            default:
+//                throw new IllegalArgumentException("Unsupported groupBy: " + groupBy);
+//        }
+//
+//        List<IChartDTO> result = new ArrayList<>();
+//
+//        int periods = 6;
+//
+//        for (int i = 0; i < periods; i++) {
+//            LocalDateTime target;
+//
+//            String periodKey;
+//            String periodLabel;
+//
+//            switch (groupBy) {
+//                case DAILY:
+//                    target = now.minusDays(i);
+//                    periodKey = target.toLocalDate().toString();
+//                    periodLabel = periodKey;
+//                    break;
+//                case WEEKLY:
+//                    target = now.minusWeeks(i);
+//                    int week = target.get(java.time.temporal.WeekFields.ISO.weekOfWeekBasedYear());
+//                    periodKey = target.getYear() + "-W" + week;
+//                    periodLabel = "Week " + week + ", " + target.getYear();
+//                    break;
+//                case MONTHLY:
+//                    target = now.minusMonths(i).withDayOfMonth(1);
+//                    periodKey = target.getYear() + "-" + String.format("%02d", target.getMonthValue());
+//                    periodLabel = target.getMonth().name().substring(0,1) + target.getMonth().name().substring(1).toLowerCase() + " " + target.getYear();
+//                    break;
+//                case YEARLY:
+//                    target = now.minusYears(i);
+//                    periodKey = String.valueOf(target.getYear());
+//                    periodLabel = periodKey;
+//                    break;
+//                default:
+//                    throw new IllegalArgumentException("Unsupported groupBy: " + groupBy);
+//            }
+//
+//            List<Transaction> periodTransactions = grouped.getOrDefault(periodKey, List.of());
+//
+//            double incomeSum = 0;
+//            double expenseSum = 0;
+//
+//            for (Transaction transaction : periodTransactions) {
+//                Double amountInUah = exchanger.convert(transaction.getAmount(), transaction.getCurrency(), Currency.UAH);
+//                if (amountInUah == null) continue;
+//
+//                if (transaction.getTransactionType() == TransactionType.INCOME) {
+//                    incomeSum += amountInUah;
+//                } else if (transaction.getTransactionType() == TransactionType.EXPENSE) {
+//                    expenseSum += amountInUah;
+//                }
+//            }
+//
+//            result.add(new IncomeExpenseDTO(periodLabel, expenseSum, incomeSum));
+//        }
+//
+//        Collections.reverse(result);
+//
+//        ChartDataResponseDTO chart = new ChartDataResponseDTO();
+//        chart.setChartTitle("Income & Expenses per last 6 periods");
+//        chart.setChartData(result);
+//        return chart;
+//    }
+
     public ChartDataResponseDTO getIncomeExpense(Long userId,
                                                  Long accountId,
                                                  LocalDate start,
@@ -80,27 +213,22 @@ public class TransactionAnalyticsService {
                                                  boolean incomeOnly,
                                                  boolean expenseOnly) {
 
-
         if (groupBy == null) {
             groupBy = PeriodType.MONTHLY;
         }
 
         LocalDateTime now = LocalDateTime.now();
 
-
         LocalDateTime startDateTime;
         LocalDateTime endDateTime;
 
         if (start == null || end == null) {
-
             startDateTime = now.minusMonths(5).withDayOfMonth(1).toLocalDate().atStartOfDay();
             endDateTime = now;
         } else {
-
             startDateTime = start.atStartOfDay();
             endDateTime = end.atTime(23, 59, 59);
         }
-
 
         List<Transaction> transactions = transactionRepository
                 .findAllByUserIdAndTransferredAtBetween(userId, startDateTime, endDateTime)
@@ -115,7 +243,6 @@ public class TransactionAnalyticsService {
                     return true;
                 })
                 .toList();
-
 
         Map<String, List<Transaction>> grouped;
 
@@ -183,18 +310,47 @@ public class TransactionAnalyticsService {
             double incomeSum = 0;
             double expenseSum = 0;
 
+            Map<String, Double> incomeByCategory = new HashMap<>();
+            Map<String, Double> expenseByCategory = new HashMap<>();
+
             for (Transaction transaction : periodTransactions) {
                 Double amountInUah = exchanger.convert(transaction.getAmount(), transaction.getCurrency(), Currency.UAH);
                 if (amountInUah == null) continue;
 
-                if (transaction.getTransactionType() == TransactionType.INCOME) {
-                    incomeSum += amountInUah;
-                } else if (transaction.getTransactionType() == TransactionType.EXPENSE) {
-                    expenseSum += amountInUah;
+                if (incomeOnly) {
+                    if (transaction.getTransactionType() == TransactionType.INCOME) {
+                        incomeSum += amountInUah;
+                        String categoryName = transaction.getCategory() != null ? transaction.getCategory().getName() : "Uncategorized";
+                        incomeByCategory.put(categoryName, incomeByCategory.getOrDefault(categoryName, 0.0) + amountInUah);
+                    }
+                } else if (expenseOnly) {
+                    if (transaction.getTransactionType() == TransactionType.EXPENSE) {
+                        expenseSum += amountInUah;
+                        String categoryName = transaction.getCategory() != null ? transaction.getCategory().getName() : "Uncategorized";
+                        expenseByCategory.put(categoryName, expenseByCategory.getOrDefault(categoryName, 0.0) + amountInUah);
+                    }
+                } else {
+                    if (transaction.getTransactionType() == TransactionType.INCOME) {
+                        incomeSum += amountInUah;
+                        String categoryName = transaction.getCategory() != null ? transaction.getCategory().getName() : "Uncategorized";
+                        incomeByCategory.put(categoryName, incomeByCategory.getOrDefault(categoryName, 0.0) + amountInUah);
+                    } else if (transaction.getTransactionType() == TransactionType.EXPENSE) {
+                        expenseSum += amountInUah;
+                        String categoryName = transaction.getCategory() != null ? transaction.getCategory().getName() : "Uncategorized";
+                        expenseByCategory.put(categoryName, expenseByCategory.getOrDefault(categoryName, 0.0) + amountInUah);
+                    }
                 }
             }
 
-            result.add(new IncomeExpenseDTO(periodLabel, expenseSum, incomeSum));
+            IncomeExpenseDTO dto = new IncomeExpenseDTO(
+                    periodLabel,
+                    expenseSum,
+                    incomeSum,
+                    incomeByCategory,
+                    expenseByCategory
+            );
+
+            result.add(dto);
         }
 
         Collections.reverse(result);
@@ -202,9 +358,9 @@ public class TransactionAnalyticsService {
         ChartDataResponseDTO chart = new ChartDataResponseDTO();
         chart.setChartTitle("Income & Expenses per last 6 periods");
         chart.setChartData(result);
+
         return chart;
     }
-
 
     public ChartDataResponseDTO getGeneralBalance(Long userId,
                                                   Long accountId,
