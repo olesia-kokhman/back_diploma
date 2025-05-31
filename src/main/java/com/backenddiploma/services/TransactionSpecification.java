@@ -73,11 +73,12 @@ public class TransactionSpecification {
 
             return cb.or(
                     cb.like(cb.lower(root.get("description")), likePattern),
-                    cb.like(cb.lower(root.get("amount").as(String.class)), likePattern),
-                    cb.like(cb.lower(root.get("transferredAt").as(String.class)), likePattern),
+                    cb.like(cb.lower(cb.function("cast", String.class, root.get("amount"))), likePattern),
+                    cb.like(cb.lower(cb.function("cast", String.class, root.get("transferredAt"))), likePattern),
                     cb.like(cb.lower(categoryJoin.get("name")), likePattern),
                     cb.like(cb.lower(accountJoin.get("name")), likePattern)
             );
         };
     }
+
 }

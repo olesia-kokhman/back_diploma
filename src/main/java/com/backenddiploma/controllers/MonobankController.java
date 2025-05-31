@@ -14,11 +14,13 @@ public class MonobankController {
     private final MonobankService monobankService;
 
     @PostMapping()
-    public ResponseEntity<Void> syncData(@RequestBody MonobankTokenDTO tokenDTO) {
-        System.out.println("this controller is working before service");
+    public ResponseEntity<String> syncData(@RequestBody MonobankTokenDTO tokenDTO) {
+        System.out.println("Received Monobank sync request for userId = " + tokenDTO.getUserId());
+
         monobankService.syncData(tokenDTO.getToken(), tokenDTO.getUserId());
-        System.out.println("this controller is working after service");
-        return ResponseEntity.ok().build();
+
+        System.out.println("Monobank sync task enqueued for userId = " + tokenDTO.getUserId());
+        return ResponseEntity.accepted().body("Monobank sync task enqueued for userId " + tokenDTO.getUserId());
     }
 }
 
