@@ -818,4 +818,13 @@
         <dropColumn tableName="user_settings" columnName="theme"/>
     </changeSet>
 
+    <changeSet id="28-remove-actual-available-from-budgets" author="olesia">
+        <dropColumn tableName="budgets" columnName="actual_amount"/>
+        <dropColumn tableName="budgets" columnName="available_amount"/>
+    </changeSet>
+
+    <changeSet id="29-remove-budget-type" author="olesia">
+        <dropColumn tableName="budgets" columnName="type"/>
+    </changeSet>
+
 </databaseChangeLog>
