@@ -11,6 +11,7 @@ public class AccountResponseDTO {
     private Long id;
     private String name;
     private AccountType accountType;
+    private String externalAccountId;
     private String currency;
     private double balance;
     private boolean isMain;

@@ -11,6 +11,7 @@ public class AccountCreateDTO {
     private String name;
     private AccountType accountType;
     private Currency currency;
+    private String externalAccountId;
     private double balance;
     private boolean isMain;
     private Long userId;

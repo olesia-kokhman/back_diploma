@@ -24,6 +24,7 @@ public class MonobankMapper {
         accountCreateDTO.setName("Monobank " + currency + ", " + userInfoDTO.getType().toString());
         accountCreateDTO.setAccountType(AccountType.BANK_ACCOUNT);
         accountCreateDTO.setCurrency(currency);
+        accountCreateDTO.setExternalAccountId(userInfoDTO.getId());
         accountCreateDTO.setBalance((float)userInfoDTO.getBalance() / 100);
         accountCreateDTO.setUserId(userId);
         accountCreateDTO.setMain(false);

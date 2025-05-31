@@ -38,6 +38,9 @@ public class Account {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "external_account_id")
+    private String externalAccountId;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
