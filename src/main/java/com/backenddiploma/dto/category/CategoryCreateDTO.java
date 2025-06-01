@@ -6,7 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class CategoryCreateDTO {
-
     private String name;
     private BudgetType type;
     private boolean isDefault;

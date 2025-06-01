@@ -31,9 +31,6 @@ public class Account {
     @Column(nullable = false)
     private double balance;
 
-    @Column(name = "is_main", nullable = false)
-    private boolean isMain;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

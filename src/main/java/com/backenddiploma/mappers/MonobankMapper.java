@@ -27,7 +27,6 @@ public class MonobankMapper {
         accountCreateDTO.setExternalAccountId(userInfoDTO.getId());
         accountCreateDTO.setBalance((float)userInfoDTO.getBalance() / 100);
         accountCreateDTO.setUserId(userId);
-        accountCreateDTO.setMain(false);
         return accountCreateDTO;
     }
 
@@ -36,7 +35,6 @@ public class MonobankMapper {
         Currency currency = mapCurrency(jarDTO.getCurrencyCode());
         accountCreateDTO.setName("Monobank " + currency + ", " + jarDTO.getTitle());
         accountCreateDTO.setAccountType(AccountType.JAR);
-        accountCreateDTO.setMain(false);
         accountCreateDTO.setBalance((float) jarDTO.getBalance() / 100);
         accountCreateDTO.setUserId(userId);
         accountCreateDTO.setCurrency(currency);
@@ -53,10 +51,11 @@ public class MonobankMapper {
         TransactionCreateDTO transactionCreateDTO = new TransactionCreateDTO();
         if(transactionDTO.getOperationAmount() < 0) {
             transactionCreateDTO.setTransactionType(TransactionType.EXPENSE);
+            transactionCreateDTO.setAmount((double) (transactionDTO.getOperationAmount() / -100));
         } else {
             transactionCreateDTO.setTransactionType(TransactionType.INCOME);
+            transactionCreateDTO.setAmount((double) (transactionDTO.getOperationAmount() / 100));
         }
-        transactionCreateDTO.setAmount((double) (transactionDTO.getOperationAmount() / 100));
         transactionCreateDTO.setUserId(userId);
         transactionCreateDTO.setDescription(transactionDTO.getDescription());
         transactionCreateDTO.setCurrency(mapCurrency(transactionDTO.getCurrencyCode()));

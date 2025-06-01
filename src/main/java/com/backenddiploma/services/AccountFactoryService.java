@@ -64,7 +64,6 @@ public class AccountFactoryService {
         account.setName(request.getName());
         account.setCurrency(request.getCurrency());
         account.setBalance(request.getBalance());
-        account.setMain(request.isMain());
         account.setUser(user);
         account.setExternalAccountId(request.getExternalAccountId());
         return account;

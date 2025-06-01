@@ -827,4 +827,8 @@
         <dropColumn tableName="budgets" columnName="type"/>
     </changeSet>
 
+    <changeSet id="30-remove-is-main" author="olesia">
+        <dropColumn tableName="accounts" columnName="is_main"/>
+    </changeSet>
+
 </databaseChangeLog>

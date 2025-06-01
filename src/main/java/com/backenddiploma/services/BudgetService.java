@@ -35,6 +35,7 @@ public class BudgetService {
     private final CategoryRepository categoryRepository;
     private final TransactionRepository transactionRepository;
     private final ExchangeService exchangeService;
+    private final CategoryService categoryService;
 //    @Transactional
 //    public BudgetResponseDTO create(BudgetCreateDTO dto) {
 //        User user = userRepository.findById(dto.getUserId())
@@ -159,8 +160,7 @@ public class BudgetService {
 
         if (category.getType().equals(BudgetType.EXPENSE)) {
             System.out.println("Category is EXPENSE");
-
-            Long uncategorizedExpenseCategoryId = 28L;
+            Long uncategorizedExpenseCategoryId = categoryService.getCategoryId("Uncategorized", dto.getUserId(), BudgetType.EXPENSE);
             if (!category.getId().equals(uncategorizedExpenseCategoryId)) {
                 System.out.println("Processing EXPENSE category (NOT Uncategorized Expense)");
 
@@ -227,7 +227,7 @@ public class BudgetService {
         if (category.getType().equals(BudgetType.INCOME)) {
             System.out.println("Category is INCOME");
 
-            Long uncategorizedIncomeCategoryId = 29L;
+            Long uncategorizedIncomeCategoryId = categoryService.getCategoryId("Uncategorized", dto.getUserId(), BudgetType.INCOME);
             if (!category.getId().equals(uncategorizedIncomeCategoryId)) {
                 System.out.println("Processing INCOME category (NOT Uncategorized Income)");
 

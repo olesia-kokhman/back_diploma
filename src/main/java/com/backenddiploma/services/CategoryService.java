@@ -7,6 +7,7 @@ import com.backenddiploma.config.exceptions.NotFoundException;
 import com.backenddiploma.mappers.CategoryMapper;
 import com.backenddiploma.models.Category;
 import com.backenddiploma.models.User;
+import com.backenddiploma.models.enums.BudgetType;
 import com.backenddiploma.repositories.CategoryRepository;
 import com.backenddiploma.repositories.UserRepository;
 import com.backenddiploma.services.integrations.CloudinaryService;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -27,6 +29,35 @@ public class CategoryService {
     private final CategoryMapper categoryMapper;
     private final UserRepository userRepository;
     private final CloudinaryService cloudinaryService;
+
+//    public CategoryResponseDTO getCategoryByMcc(int mcc, Long userId) {
+//        Category category = categoryRepository.findByMccRangeAndUserId(mcc, userId)
+//                .orElseThrow(() -> new NotFoundException("Category not found for userId = " + userId + ", mcc = " + mcc));
+//        return categoryMapper.toResponse(category);
+//    }
+
+    public Category getCategoryByMcc(int mcc, BudgetType budgetType, Long userId) {
+        Optional<Category> categoryOpt = categoryRepository
+                .findByMccRangeAndUserId(mcc, userId);
+
+        Category category;
+        if (categoryOpt.isPresent()) {
+            category = categoryOpt.get();
+        } else {
+            String defaultCategoryName = "Uncategorized";
+            category =  categoryRepository.findByNameAndUserIdAndType(defaultCategoryName, userId, budgetType)
+                    .orElseThrow(() -> new NotFoundException("Default category not found for userId = " + userId));
+        }
+
+        return category;
+    }
+
+    public Long getCategoryId(String name, Long userId, BudgetType budgetType) {
+        if(categoryRepository.findByNameAndUserIdAndType(name, userId, budgetType).isEmpty()) {
+            throw new NotFoundException("category not found");
+        }
+        return categoryRepository.findByNameAndUserIdAndType(name, userId, budgetType).get().getId();
+    }
 
     @Transactional
     public CategoryResponseDTO create(CategoryCreateDTO dto) {

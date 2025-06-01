@@ -14,7 +14,6 @@ public class AccountResponseDTO {
     private String externalAccountId;
     private String currency;
     private double balance;
-    private boolean isMain;
     private Long userId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

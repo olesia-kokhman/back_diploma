@@ -22,6 +22,11 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.create(dto));
     }
 
+//    @GetMapping("/mcc")
+//    public ResponseEntity<CategoryResponseDTO> getByMcc(@RequestParam int mcc, @RequestParam Long userId) {
+//        return ResponseEntity.ok(categoryService.getCategoryByMcc(mcc, userId));
+//    }
+
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponseDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(categoryService.getById(id));

@@ -5,6 +5,7 @@ import com.backenddiploma.dto.transaction.TransactionCSVImportDTO;
 import com.backenddiploma.dto.transaction.TransactionCreateDTO;
 import com.backenddiploma.mappers.CSVImportMapper;
 import com.backenddiploma.models.Category;
+import com.backenddiploma.models.enums.BudgetType;
 import com.backenddiploma.repositories.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class CSVImportService {
     private final CSVImportMapper mapper;
     private final TransactionService transactionService;
     final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
     public void importCsv(MultipartFile file, Long userId, Long accountId) {
         if (file.isEmpty() || !file.getOriginalFilename().endsWith(".csv")) {
@@ -36,12 +38,8 @@ public class CSVImportService {
                     .toList();
 
             for (TransactionCSVImportDTO csvDto : csvDtos) {
-                Long transactionCategoryIfNull  = csvDto.getAmount() > 0 ? 29L : 28L;
-//                Category category = categoryRepository
-//                        .findByMccAndUserId(csvDto.getMcc(), userId)
-//                        .orElseGet(() -> categoryRepository.findById(transactionCategoryIfNull)
-//                                .orElseThrow(() -> new NotFoundException("User not found")));
-
+                BudgetType type = csvDto.getAmount() > 0 ? BudgetType.INCOME : BudgetType.EXPENSE;
+                Category category = categoryService.getCategoryByMcc(csvDto.getMcc(), type, userId);
                 TransactionCreateDTO dto = new TransactionCreateDTO();
                 dto.setTransactionType(csvDto.getTransactionType());
                 dto.setAmount(csvDto.getAmount());
@@ -50,7 +48,7 @@ public class CSVImportService {
                 dto.setTransferredAt(csvDto.getTransferredAt());
                 dto.setUserId(userId);
                 dto.setAccountId(accountId);
-                dto.setCategoryId((long)1);
+                dto.setCategoryId(category.getId());
                 transactionService.create(dto);
             }
 

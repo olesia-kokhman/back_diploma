@@ -13,6 +13,7 @@ import com.backenddiploma.models.accounts.Account;
 import com.backenddiploma.models.Category;
 import com.backenddiploma.models.Transaction;
 import com.backenddiploma.models.User;
+import com.backenddiploma.models.enums.BudgetType;
 import com.backenddiploma.repositories.AccountRepository;
 import com.backenddiploma.repositories.CategoryRepository;
 import com.backenddiploma.repositories.TransactionRepository;
@@ -23,7 +24,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,10 +38,10 @@ public class MonobankService {
 
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
-    private final CategoryRepository categoryRepository;
     private final TransactionRepository transactionRepository;
     private final AccountMapper accountMapper;
     private final TransactionMapper transactionMapper;
+    private final CategoryService categoryService;
 
     private final MonobankSyncAccountsQueue monobankSyncTransactionsQueue;
 
@@ -53,11 +57,13 @@ public class MonobankService {
             for (MonobankAccountDTO monobankAccountDTO : accounts) {
 
                 AccountCreateDTO accountDTO = monobankMapper.convertAccountToAccountCreateDTO(monobankAccountDTO, user.getId());
-                Account account = accountMapper.toEntity(accountDTO, user);
-                accountRepository.save(account);
-
-
-                monobankSyncTransactionsQueue.enqueue(token, userId, monobankAccountDTO.getId());
+                if(accountRepository.findByUserIdAndExternalAccountId(user.getId(), accountDTO.getExternalAccountId()).isPresent()) {
+                    continue;
+                } else {
+                    Account account = accountMapper.toEntity(accountDTO, user);
+                    accountRepository.save(account);
+                    monobankSyncTransactionsQueue.enqueue(token, userId, monobankAccountDTO.getId());
+                }
             }
 
             System.out.println("Enqueued " + accounts.size() + " Monobank sync tasks for userId = " + userId);
@@ -71,20 +77,36 @@ public class MonobankService {
         Account account = accountRepository.findByUserIdAndExternalAccountId(userId, externalAccountId)
                 .orElseThrow(() -> new NotFoundException("Account not found for accountId = " + externalAccountId));
 
+//        LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
+//        long fromTimestamp = firstDayOfMonth.atStartOfDay(ZoneOffset.UTC).toEpochSecond();
+
+        LocalDate thirtyDaysAgo = LocalDate.now().minusDays(30);
+        long fromTimestamp = thirtyDaysAgo.atStartOfDay(ZoneOffset.UTC).toEpochSecond();
         List<MonobankTransactionDTO> transactions = monobankSyncService
-                .getTransactions(token, externalAccountId, "1746057600")
+                .getTransactions(token, externalAccountId, String.valueOf(fromTimestamp))
                 .block();
+
 
         if (transactions != null) {
             for (MonobankTransactionDTO txDTO : transactions) {
-                Long transactionCategoryIfNull = txDTO.getBalance() > 0 ? 29L : 28L;
+//                Optional<Category> categoryOpt = categoryRepository
+//                        .findByMccRangeAndUserId(txDTO.getMcc(), user.getId());
+//
+//                Category category;
+//                if (categoryOpt.isPresent()) {
+//                    category = categoryOpt.get();
+//                } else {
+//                    BudgetType defaultCategoryType = txDTO.getOperationAmount() > 0 ? BudgetType.INCOME : BudgetType.EXPENSE;
+//                    String defaultCategoryName = "Uncategorized";
+//                    category =  categoryRepository.findByNameAndUserIdAndType(defaultCategoryName, user.getId(), defaultCategoryType)
+//                            .orElseThrow(() -> new NotFoundException("Default category not found for userId = " + userId));
+//                }
 
-                Category category = categoryRepository
-                        .findByMccAndUserId(txDTO.getMcc(), user.getId())
-                        .orElseGet(() -> categoryRepository.findById(transactionCategoryIfNull)
-                                .orElseThrow(() -> new NotFoundException("User not found")));
+                BudgetType defaultCategoryType = txDTO.getOperationAmount() > 0 ? BudgetType.INCOME : BudgetType.EXPENSE;
+                Category category = categoryService.getCategoryByMcc(txDTO.getMcc(),defaultCategoryType, user.getId());
 
-                TransactionCreateDTO txCreateDTO = monobankMapper.convertToTransactionCreateDTO(txDTO, user.getId(), account.getId(), category.getId());
+                TransactionCreateDTO txCreateDTO = monobankMapper.convertToTransactionCreateDTO(
+                        txDTO, user.getId(), account.getId(), category.getId());
                 Transaction transaction = transactionMapper.toEntity(txCreateDTO, account, category, user);
                 transactionRepository.save(transaction);
             }

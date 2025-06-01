@@ -26,8 +26,6 @@ public class AccountMapper {
         if (request.getName() != null) account.setName(request.getName());
         if (request.getCurrency() != null) account.setCurrency(Currency.valueOf(request.getCurrency()));
         if (request.getBalance() != null) account.setBalance(request.getBalance());
-        if (request.getIsMain() != null) account.setMain(request.getIsMain());
-
 
         if (account instanceof InvestmentAccount investment) {
             if (request.getQuantity() != null) investment.setQuantity(request.getQuantity());
@@ -60,7 +58,6 @@ public class AccountMapper {
         response.setName(account.getName());
         response.setCurrency(account.getCurrency().toString());
         response.setBalance(account.getBalance());
-        response.setMain(account.isMain());
         response.setUserId(account.getUser() != null ? account.getUser().getId() : null);
         response.setCreatedAt(account.getCreatedAt());
         response.setUpdatedAt(account.getUpdatedAt());
