@@ -27,18 +27,8 @@ public class Budget {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Category category;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private BudgetType type;
-
     @Column(name = "planned_amount", nullable = false)
     private double plannedAmount;
-
-    @Column(name = "actual_amount", nullable = false)
-    private double actualAmount;
-
-    @Column(name = "available_amount", nullable = false)
-    private double availableAmount;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

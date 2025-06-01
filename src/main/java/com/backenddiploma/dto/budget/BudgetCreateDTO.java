@@ -1,6 +1,7 @@
 package com.backenddiploma.dto.budget;
 
 import com.backenddiploma.models.enums.BudgetType;
+import com.backenddiploma.models.enums.Currency;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -10,11 +11,7 @@ public class BudgetCreateDTO {
 
     private Long userId;
     private Long categoryId;
-    private BudgetType type;
     private double plannedAmount;
-    private double actualAmount;
-    private double availableAmount;
-    private String currency;
+    private Currency currency;
     private LocalDate periodStart;
-    private LocalDate periodEnd;
 }

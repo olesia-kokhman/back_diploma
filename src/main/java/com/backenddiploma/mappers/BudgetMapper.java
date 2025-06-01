@@ -17,13 +17,9 @@ public class BudgetMapper {
         Budget budget = new Budget();
         budget.setUser(user);
         budget.setCategory(category);
-        budget.setType(dto.getType());
         budget.setPlannedAmount(dto.getPlannedAmount());
-        budget.setActualAmount(dto.getActualAmount());
-        budget.setAvailableAmount(dto.getAvailableAmount());
-        budget.setCurrency(Currency.valueOf(dto.getCurrency()));
+        budget.setCurrency(dto.getCurrency());
         budget.setPeriodStart(dto.getPeriodStart());
-        budget.setPeriodEnd(dto.getPeriodEnd());
         return budget;
     }
 
@@ -31,26 +27,11 @@ public class BudgetMapper {
         if (category != null) {
             budget.setCategory(category);
         }
-        if (dto.getType() != null) {
-            budget.setType(dto.getType());
-        }
         if (dto.getPlannedAmount() != null) {
             budget.setPlannedAmount(dto.getPlannedAmount());
         }
-        if (dto.getActualAmount() != null) {
-            budget.setActualAmount(dto.getActualAmount());
-        }
-        if (dto.getAvailableAmount() != null) {
-            budget.setAvailableAmount(dto.getAvailableAmount());
-        }
         if (dto.getCurrency() != null) {
-            budget.setCurrency(Currency.valueOf(dto.getCurrency()));
-        }
-        if (dto.getPeriodStart() != null) {
-            budget.setPeriodStart(dto.getPeriodStart());
-        }
-        if (dto.getPeriodEnd() != null) {
-            budget.setPeriodEnd(dto.getPeriodEnd());
+            budget.setCurrency(dto.getCurrency());
         }
     }
 
@@ -59,11 +40,8 @@ public class BudgetMapper {
         response.setId(budget.getId());
         response.setUserId(budget.getUser().getId());
         response.setCategoryId(budget.getCategory().getId());
-        response.setType(budget.getType());
         response.setPlannedAmount(budget.getPlannedAmount());
-        response.setActualAmount(budget.getActualAmount());
-        response.setAvailableAmount(budget.getAvailableAmount());
-        response.setCurrency(budget.getCurrency().toString());
+        response.setCurrency(budget.getCurrency());
         response.setPeriodStart(budget.getPeriodStart());
         response.setPeriodEnd(budget.getPeriodEnd());
         response.setCreatedAt(budget.getCreatedAt());
