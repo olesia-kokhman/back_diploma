@@ -18,7 +18,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<CategoryResponseDTO> create(@RequestBody CategoryCreateDTO dto) {
+    public ResponseEntity<CategoryResponseDTO> create(@ModelAttribute CategoryCreateDTO dto) {
         return ResponseEntity.ok(categoryService.create(dto));
     }
 
@@ -28,7 +28,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryResponseDTO> update(@PathVariable Long id, @RequestBody CategoryUpdateDTO dto) {
+    public ResponseEntity<CategoryResponseDTO> update(@PathVariable Long id, @ModelAttribute CategoryUpdateDTO dto) {
         return ResponseEntity.ok(categoryService.update(id, dto));
     }
 

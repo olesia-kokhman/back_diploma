@@ -1,5 +1,6 @@
 package com.backenddiploma.services;
 
+import com.backenddiploma.config.CloudinaryConfig;
 import com.backenddiploma.config.exceptions.AlreadyExistsException;
 import com.backenddiploma.config.exceptions.NotFoundException;
 import com.backenddiploma.dto.user.UserCreateDTO;
@@ -11,11 +12,14 @@ import com.backenddiploma.models.User;
 import com.backenddiploma.repositories.CategoryRepository;
 import com.backenddiploma.repositories.UserRepository;
 
+import com.backenddiploma.services.integrations.CloudinaryService;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 //import com.backenddiploma.security.UserDetailsImpl;
@@ -39,6 +43,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final DefaultCategoryLoader defaultCategoryLoader;
     private final CategoryRepository categoryRepository;
+    private final CloudinaryService cloudinaryService;
 
     @Transactional
     public UserResponseDTO create(UserCreateDTO dto) {
@@ -51,7 +56,6 @@ public class UserService {
 
         List<Category> defaultCategories = defaultCategoryLoader.loadDefaultCategoriesForUser(savedUser);
         categoryRepository.saveAll(defaultCategories);
-
         return userMapper.toResponse(savedUser);
     }
 
@@ -74,10 +78,36 @@ public class UserService {
         }
 
         userMapper.updateUserFromDto(user, dto);
-        User updatedUser = userRepository.save(user);
+        MultipartFile file = dto.getFile();
+        if (file != null && !file.isEmpty()) {
 
+            if (user.getProfilePicturePublicId() != null) {
+                cloudinaryService.deleteFile(user.getProfilePicturePublicId());
+            }
+
+            String publicId = "user_avatars/" + id + "_" + UUID.randomUUID();
+            String imageUrl = cloudinaryService.uploadFile(file, publicId);
+            user.setProfilePictureUrl(imageUrl);
+            user.setProfilePicturePublicId(publicId);
+        }
+
+        User updatedUser = userRepository.save(user);
         return userMapper.toResponse(updatedUser);
     }
+
+    @Transactional
+    public void deleteAvatar(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
+
+        if (user.getProfilePicturePublicId() != null) {
+            cloudinaryService.deleteFile(user.getProfilePicturePublicId());
+            user.setProfilePicturePublicId(null);
+            user.setProfilePictureUrl(null);
+            userRepository.save(user);
+        }
+    }
+
 
     @Transactional
     public void delete(Long id) {

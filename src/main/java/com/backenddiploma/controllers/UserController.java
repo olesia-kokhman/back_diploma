@@ -7,6 +7,7 @@ import com.backenddiploma.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,9 +29,18 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @RequestBody UserUpdateDTO dto) {
+    public ResponseEntity<UserResponseDTO> update(@PathVariable Long id,
+                                                  @ModelAttribute UserUpdateDTO dto) {
         return ResponseEntity.ok(userService.update(id, dto));
     }
+
+
+    @DeleteMapping("/{id}/avatar")
+    public ResponseEntity<Void> deleteAvatar(@PathVariable Long id) {
+        userService.deleteAvatar(id);
+        return ResponseEntity.noContent().build();
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

@@ -19,12 +19,12 @@ Entertainment,Розваги,EXPENSE,7832,7995,#F4511E,
 Shops,Магазини,EXPENSE,5992,5999,#AED581,
 Transfer,Перекази,EXPENSE,4829,4829,#9575CD,
 Donation,Благодійність,EXPENSE,8398,8398,#E57373,
-Digital,Цифрові товари та послуги,EXPENSE,5815,5818,#4FC3F7,
+Digital,Цифрові товари та послуги,EXPENSE,5815,5818,#4FC3F7,https://res.cloudinary.com/dzjwtdy8d/image/upload/v1748752138/default_category_icons/cc0b7093-6b62-4696-9fb7-bd8c9f01277a.png
 Utilities,Комунальні послуги,EXPENSE,4900,4900,#FFCA28,
-Cash Withdrawal,Зняття готівки,EXPENSE,6010,6010,#D4E157,
+Cash Withdrawal,Зняття готівки,EXPENSE,6010,6010,#D4E157,https://res.cloudinary.com/dzjwtdy8d/image/upload/v1748752087/default_category_icons/ae63dce3-2b89-46f1-8aec-150a5114b7b9.png
 Salary & Money Transfer,Зарплата та перекази,INCOME,6012,6012,#66BB6A,
-Professional Services,Професійні послуги,EXPENSE,8999,8999,#7986CB,
+Professional Services,Професійні послуги,EXPENSE,8999,8999,#7986CB,https://res.cloudinary.com/dzjwtdy8d/image/upload/v1748752067/default_category_icons/b6a26ed9-36ff-46bb-a90e-930fc4c0d59a.png
 Beauty,Краса,EXPENSE,7230,7297,#F48FB1,
 Travel,Подорожі,EXPENSE,3000,3790,#4DD0E1,
-Uncategorized,Невизначено,EXPENSE,,, #9E9E9E,
-Uncategorized,Невизначено,INCOME,,, #9E9E9E,
+Uncategorized,Невизначено,EXPENSE,,,#9E9E9E,https://res.cloudinary.com/dzjwtdy8d/image/upload/v1748751974/default_category_icons/92527609-d3b6-4427-b1c6-d025d9da6f4d.png
+Uncategorized,Невизначено,INCOME,,,#9E9E9E,https://res.cloudinary.com/dzjwtdy8d/image/upload/v1748752017/default_category_icons/57454828-1ac8-41e3-9e75-3ae03fa10847.png

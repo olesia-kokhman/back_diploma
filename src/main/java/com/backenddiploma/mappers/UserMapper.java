@@ -32,9 +32,7 @@ public class UserMapper {
         if (dto.getRole() != null) {
             user.setRole(dto.getRole());
         }
-        if (dto.getProfilePictureUrl() != null) {
-            user.setProfilePictureUrl(dto.getProfilePictureUrl());
-        }
+
     }
 
     public UserResponseDTO toResponse(User user) {

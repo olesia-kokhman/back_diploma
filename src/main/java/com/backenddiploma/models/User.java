@@ -33,6 +33,9 @@ public class User {
     @Column(name = "profile_picture_url", length = 255)
     private String profilePictureUrl;
 
+    @Column(name = "profile_picture_public_id")
+    private String profilePicturePublicId;
+
     @Column(name = "webhook_url")
     private String webHookUrl;
 

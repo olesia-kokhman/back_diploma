@@ -9,11 +9,14 @@ import com.backenddiploma.models.Category;
 import com.backenddiploma.models.User;
 import com.backenddiploma.repositories.CategoryRepository;
 import com.backenddiploma.repositories.UserRepository;
+import com.backenddiploma.services.integrations.CloudinaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +26,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
     private final UserRepository userRepository;
+    private final CloudinaryService cloudinaryService;
 
     @Transactional
     public CategoryResponseDTO create(CategoryCreateDTO dto) {
@@ -31,6 +35,15 @@ public class CategoryService {
 
         Category category = categoryMapper.toEntity(dto, user);
         category.setDefault(false);
+        MultipartFile file = dto.getFile();
+        if (file != null && !file.isEmpty()) {
+            String publicId = "category_icons/" + user.getId() + "_" + UUID.randomUUID();
+            String imageUrl = cloudinaryService.uploadFile(file, publicId);
+            category.setIconUrl(imageUrl);
+        } else if (dto.getIconUrl() != null) {
+            category.setIconUrl(dto.getIconUrl());
+        }
+
         Category savedCategory = categoryRepository.save(category);
 
         return categoryMapper.toResponse(savedCategory);
@@ -44,21 +57,38 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryResponseDTO update(Long id, CategoryUpdateDTO dto) {
+    public CategoryResponseDTO update(Long id, CategoryUpdateDTO form) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Category not found with id: " + id));
 
         if (category.isDefault()) {
-            if (dto.getColor() != null) {
-                category.setColor(dto.getColor());
+            if (form.getColor() != null) {
+                category.setColor(form.getColor());
             }
 
-            if (dto.getName() != null || dto.getType() != null || dto.getIconUrl() != null) {
+            if (form.getName() != null || form.getType() != null || form.getIconUrl() != null || (form.getFile() != null && !form.getFile().isEmpty())) {
                 throw new RuntimeException("Only color can be changed for default category");
             }
 
         } else {
-            categoryMapper.updateCategoryFromDto(category, dto);
+            if (form.getName() != null) {
+                category.setName(form.getName());
+            }
+            if (form.getColor() != null) {
+                category.setColor(form.getColor());
+            }
+            if (form.getType() != null) {
+                category.setType(form.getType());
+            }
+
+            MultipartFile file = form.getFile();
+            if (file != null && !file.isEmpty()) {
+                String publicId = "category_icons/" + category.getUser().getId() + "_" + UUID.randomUUID();
+                String imageUrl = cloudinaryService.uploadFile(file, publicId);
+                category.setIconUrl(imageUrl);
+            } else if (form.getIconUrl() != null) {
+                category.setIconUrl(form.getIconUrl());
+            }
         }
 
         Category updatedCategory = categoryRepository.save(category);

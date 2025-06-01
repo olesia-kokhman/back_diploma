@@ -2,6 +2,7 @@ package com.backenddiploma.dto.category;
 
 import com.backenddiploma.models.enums.BudgetType;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class CategoryCreateDTO {
@@ -12,4 +13,5 @@ public class CategoryCreateDTO {
     private Long userId;
     private String iconUrl;
     private String color;
+    private MultipartFile file;
 }

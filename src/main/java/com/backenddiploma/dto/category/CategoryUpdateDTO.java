@@ -2,6 +2,7 @@ package com.backenddiploma.dto.category;
 
 import com.backenddiploma.models.enums.BudgetType;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class CategoryUpdateDTO {
@@ -10,4 +11,5 @@ public class CategoryUpdateDTO {
     private BudgetType type;
     private String iconUrl;
     private String color;
+    private MultipartFile file;
 }
