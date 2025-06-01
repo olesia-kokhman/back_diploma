@@ -1,29 +1,30 @@
-name,user_id,type,is_default,created_at,updated_at,start_mcc,end_mcc
-Groceries,1,EXPENSE,True,2025-05-19 14:51:27.330717,,5411,5499
-Alcohol & Tobacco,1,EXPENSE,True,2025-05-19 14:51:27.330717,,5921,5921
-Transport,1,EXPENSE,True,2025-05-19 14:51:27.330717,,4111,4111
-Fuel,1,EXPENSE,True,2025-05-19 14:51:27.330717,,5541,5542
-Car Services,1,EXPENSE,True,2025-05-19 14:51:27.330717,,7512,7542
-Cosmetics,1,EXPENSE,True,2025-05-19 14:51:27.330717,,5970,5977
-Eating Out,1,EXPENSE,True,2025-05-19 14:51:27.330717,,5812,5814
-Phone & Internet,1,EXPENSE,True,2025-05-19 14:51:27.330717,,4814,4816
-Taxi,1,EXPENSE,True,2025-05-19 14:51:27.330717,,4121,4121
-Clothing,1,EXPENSE,True,2025-05-19 14:51:27.330717,,5651,5699
-General Retail,1,EXPENSE,True,2025-05-19 14:51:27.330717,,5311,5399
-Pharmacy,1,EXPENSE,True,2025-05-19 14:51:27.330717,,5912,5912
-Books & Media,1,EXPENSE,True,2025-05-19 14:51:27.330717,,5942,5943
-Education,1,EXPENSE,True,2025-05-19 14:51:27.330717,,8211,8299
-Building Materials,1,EXPENSE,True,2025-05-19 14:51:27.330717,,5200,5211
-Home & Furniture,1,EXPENSE,True,2025-05-19 14:51:27.330717,,5712,5714
-Entertainment,1,EXPENSE,True,2025-05-19 14:51:27.330717,,7832,7995
-Shops,1,EXPENSE,True,2025-05-19 14:51:27.330717,,5992,5999
-Transfer,1,EXPENSE,True,2025-05-19 14:51:27.330717,,4829,4829
-Donation,1,EXPENSE,True,2025-05-19 14:51:27.330717,,8398,8398
-Digital,1,EXPENSE,True,2025-05-19 14:51:27.330717,,5815,5818
-Utilities,1,EXPENSE,True,2025-05-19 14:51:27.330717,,4900,4900
-Cash Withdrawal,1,EXPENSE,True,2025-05-19 14:51:27.330717,,6010,6010
-Salary & Money Transfer,1,INCOME,True,2025-05-19 14:51:27.330717,,6012,6012
-Professional Services,1,EXPENSE,True,2025-05-19 14:51:27.330717,,8999,8999
-Beauty,1,EXPENSE,True,2025-05-19 14:51:27.330717,,7230,7297
-Travel,1,EXPENSE,True,2025-05-19 14:51:27.330717,,3000,3790
-
+name,name_uk,type,start_mcc,end_mcc,color,icon_url
+Groceries,Продукти,EXPENSE,5411,5499,#4CAF50,
+Alcohol & Tobacco,Алкоголь і тютюн,EXPENSE,5921,5921,#FF7043,
+Transport,Транспорт,EXPENSE,4111,4111,#29B6F6,
+Fuel,Пальне,EXPENSE,5541,5542,#FF8A65,
+Car Services,Автосервіс,EXPENSE,7512,7542,#8E24AA,
+Cosmetics,Косметика,EXPENSE,5970,5977,#F06292,
+Eating Out,Кафе/ресторани,EXPENSE,5812,5814,#FFD54F,
+Phone & Internet,Телефон та інтернет,EXPENSE,4814,4816,#7986CB,
+Taxi,Таксі,EXPENSE,4121,4121,#00ACC1,
+Clothing,Одяг,EXPENSE,5651,5699,#FFB74D,
+General Retail,Загальні покупки,EXPENSE,5311,5399,#81C784,
+Pharmacy,Аптека,EXPENSE,5912,5912,#4DB6AC,
+Books & Media,Книги та медіа,EXPENSE,5942,5943,#BA68C8,
+Education,Освіта,EXPENSE,8211,8299,#64B5F6,
+Building Materials,Будівельні матеріали,EXPENSE,5200,5211,#A1887F,
+Home & Furniture,Дім та меблі,EXPENSE,5712,5714,#90A4AE,
+Entertainment,Розваги,EXPENSE,7832,7995,#F4511E,
+Shops,Магазини,EXPENSE,5992,5999,#AED581,
+Transfer,Перекази,EXPENSE,4829,4829,#9575CD,
+Donation,Благодійність,EXPENSE,8398,8398,#E57373,
+Digital,Цифрові товари та послуги,EXPENSE,5815,5818,#4FC3F7,
+Utilities,Комунальні послуги,EXPENSE,4900,4900,#FFCA28,
+Cash Withdrawal,Зняття готівки,EXPENSE,6010,6010,#D4E157,
+Salary & Money Transfer,Зарплата та перекази,INCOME,6012,6012,#66BB6A,
+Professional Services,Професійні послуги,EXPENSE,8999,8999,#7986CB,
+Beauty,Краса,EXPENSE,7230,7297,#F48FB1,
+Travel,Подорожі,EXPENSE,3000,3790,#4DD0E1,
+Uncategorized,Невизначено,EXPENSE,,, #9E9E9E,
+Uncategorized,Невизначено,INCOME,,, #9E9E9E,

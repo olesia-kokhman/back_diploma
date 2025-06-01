@@ -588,7 +588,7 @@
     </changeSet>
 
     <changeSet id="16-seed-default-categories" author="olesia">
-
+        <validCheckSum>ANY</validCheckSum>
         <delete tableName="transactions"/>
         <delete tableName="categories"/>
 

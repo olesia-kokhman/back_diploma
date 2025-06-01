@@ -30,6 +30,7 @@ public class CategoryService {
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + dto.getUserId()));
 
         Category category = categoryMapper.toEntity(dto, user);
+        category.setDefault(false);
         Category savedCategory = categoryRepository.save(category);
 
         return categoryMapper.toResponse(savedCategory);
@@ -47,16 +48,31 @@ public class CategoryService {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Category not found with id: " + id));
 
-        categoryMapper.updateCategoryFromDto(category, dto);
-        Category updatedCategory = categoryRepository.save(category);
+        if (category.isDefault()) {
+            if (dto.getColor() != null) {
+                category.setColor(dto.getColor());
+            }
 
+            if (dto.getName() != null || dto.getType() != null || dto.getIconUrl() != null) {
+                throw new RuntimeException("Only color can be changed for default category");
+            }
+
+        } else {
+            categoryMapper.updateCategoryFromDto(category, dto);
+        }
+
+        Category updatedCategory = categoryRepository.save(category);
         return categoryMapper.toResponse(updatedCategory);
     }
+
 
     @Transactional
     public void delete(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Category not found with id: " + id));
+        if (category.isDefault()) {
+            throw new RuntimeException("Cannot delete default category");
+        }
         categoryRepository.delete(category);
     }
 

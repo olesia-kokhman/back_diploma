@@ -4,10 +4,14 @@ import com.backenddiploma.models.enums.BudgetType;
 import lombok.Data;
 
 @Data
-public class CategoryUpdateDTO {
-
+public class DefaultCategoryCreateDTO {
     private String name;
+    private String nameUK;
     private BudgetType type;
+    private boolean isDefault;
+    private Long userId;
     private String iconUrl;
     private String color;
+    private Integer startMcc;
+    private Integer endMcc;
 }

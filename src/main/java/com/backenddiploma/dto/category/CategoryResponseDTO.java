@@ -13,6 +13,7 @@ public class CategoryResponseDTO {
     private BudgetType type;
     private boolean isDefault;
     private String iconUrl;
+    private String nameUK;
     private String color;
     private Long userId;
     private LocalDateTime createdAt;

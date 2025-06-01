@@ -6,7 +6,9 @@ import com.backenddiploma.dto.user.UserCreateDTO;
 import com.backenddiploma.dto.user.UserResponseDTO;
 import com.backenddiploma.dto.user.UserUpdateDTO;
 import com.backenddiploma.mappers.UserMapper;
+import com.backenddiploma.models.Category;
 import com.backenddiploma.models.User;
+import com.backenddiploma.repositories.CategoryRepository;
 import com.backenddiploma.repositories.UserRepository;
 
 import org.springframework.stereotype.Service;
@@ -35,6 +37,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final DefaultCategoryLoader defaultCategoryLoader;
+    private final CategoryRepository categoryRepository;
 
     @Transactional
     public UserResponseDTO create(UserCreateDTO dto) {
@@ -44,6 +48,9 @@ public class UserService {
 
         User user = userMapper.toEntity(dto);
         User savedUser = userRepository.save(user);
+
+        List<Category> defaultCategories = defaultCategoryLoader.loadDefaultCategoriesForUser(savedUser);
+        categoryRepository.saveAll(defaultCategories);
 
         return userMapper.toResponse(savedUser);
     }

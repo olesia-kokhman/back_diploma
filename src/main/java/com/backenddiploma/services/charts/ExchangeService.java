@@ -16,42 +16,33 @@ public class ExchangeService {
 
     public Double convert(double amount, Currency from, Currency to) {
         if (from == to) {
-            System.out.println("Currencies are the same (" + from + "). No conversion needed.");
             return amount;
         }
 
         try {
             List<MonobankExchangeRateDTO> rates = cacheService.getRates();
             if (rates == null) {
-                System.out.println("Exchange rates are NULL! Cannot perform conversion.");
                 return null;
             }
 
             Optional<MonobankExchangeRateDTO> rateOpt = findRate(rates, from.getIsoCode(), to.getIsoCode());
 
             if (rateOpt.isEmpty()) {
-                System.out.println("NO exchange rate found from " + from + " to " + to + "!");
                 return null;
             }
 
             MonobankExchangeRateDTO rate = rateOpt.get();
-
             double result;
 
             if (rate.getCurrencyCodeA() == from.getIsoCode()) {
-
                 result = amount * rate.getRateBuy();
-                System.out.println("Using DIRECT rate: " + rate.getRateBuy() + " → Result = " + result);
             } else {
-
                 result = amount / rate.getRateSell();
-                System.out.println("Using REVERSE rate: " + rate.getRateSell() + " → Result = " + result);
             }
 
             return result;
 
         } catch (Exception exception) {
-            System.out.println("Exception during conversion: " + exception.getMessage());
             return null;
         }
     }
@@ -66,14 +57,8 @@ public class ExchangeService {
             return directRate;
         }
 
-        Optional<MonobankExchangeRateDTO> reverseRate = rates.stream()
+        return rates.stream()
                 .filter(rate -> rate.getCurrencyCodeA() == codeB && rate.getCurrencyCodeB() == codeA)
                 .findFirst();
-
-        if (reverseRate.isPresent()) {
-            System.out.println("Using REVERSE rate from " + codeB + " to " + codeA);
-        }
-
-        return reverseRate;
     }
 }
