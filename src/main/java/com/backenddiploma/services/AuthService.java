@@ -5,7 +5,9 @@ import com.backenddiploma.dto.security.RegisterRequestDTO;
 import com.backenddiploma.dto.security.LoginRequestDTO;
 import com.backenddiploma.dto.user.UserCreateDTO;
 import com.backenddiploma.mappers.UserMapper;
+import com.backenddiploma.models.Category;
 import com.backenddiploma.models.User;
+import com.backenddiploma.repositories.CategoryRepository;
 import com.backenddiploma.repositories.UserRepository;
 import com.backenddiploma.security.JwtCore;
 import com.backenddiploma.security.UserDetailsImpl;
@@ -17,6 +19,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -26,6 +30,8 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
     private final JwtCore jwtCore;
+    private final DefaultCategoryLoader defaultCategoryLoader;
+    private final CategoryRepository categoryRepository;
 
     @Transactional
     public String register(RegisterRequestDTO request) {
@@ -41,6 +47,8 @@ public class AuthService {
 
         User user = userMapper.toEntity(userCreateDTO);
         userRepository.save(user);
+        List<Category> defaultCategories = defaultCategoryLoader.loadDefaultCategoriesForUser(user);
+        categoryRepository.saveAll(defaultCategories);
         UserDetailsImpl userDetails = UserDetailsImpl.build(user);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(
