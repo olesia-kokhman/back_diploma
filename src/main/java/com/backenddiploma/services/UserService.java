@@ -1,6 +1,5 @@
 package com.backenddiploma.services;
 
-import com.backenddiploma.config.CloudinaryConfig;
 import com.backenddiploma.config.exceptions.AlreadyExistsException;
 import com.backenddiploma.config.exceptions.NotFoundException;
 import com.backenddiploma.dto.user.UserCreateDTO;
@@ -12,7 +11,11 @@ import com.backenddiploma.models.User;
 import com.backenddiploma.repositories.CategoryRepository;
 import com.backenddiploma.repositories.UserRepository;
 
+import com.backenddiploma.security.UserDetailsImpl;
 import com.backenddiploma.services.integrations.CloudinaryService;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,22 +25,16 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-//import com.backenddiploma.security.UserDetailsImpl;
-//import org.springframework.core.userdetails.UserDetails;
-//import org.springframework.core.userdetails.UserDetailsService;
-//import org.springframework.core.userdetails.UsernameNotFoundException;
-
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
 
-//    @Override
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        User user = userRepository.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException(
-//                String.format("User '%s' not found", username)));
-//
-//        return UserDetailsImpl.build(user);
-//    }
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return UserDetailsImpl.build(user);
+    }
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
