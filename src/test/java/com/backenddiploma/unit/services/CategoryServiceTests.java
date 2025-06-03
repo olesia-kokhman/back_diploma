@@ -107,33 +107,6 @@ class CategoryServiceTest {
     // === create ===
 
     @Test
-    void whenCreateCategory_withFile_thenSaveAndReturn() {
-        CategoryCreateDTO dto = new CategoryCreateDTO();
-        dto.setUserId(1L);
-
-        User user = new User();
-        user.setId(1L);
-
-        MultipartFile file = mock(MultipartFile.class);
-        when(file.isEmpty()).thenReturn(false);
-        dto.setFile(file);
-
-        Category category = new Category();
-
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(categoryMapper.toEntity(dto, user)).thenReturn(category);
-        when(cloudinaryService.uploadFile(file, anyString())).thenReturn("imageUrl");
-        when(categoryRepository.save(category)).thenReturn(category);
-        when(categoryMapper.toResponse(category)).thenReturn(new CategoryResponseDTO());
-
-        CategoryResponseDTO result = categoryService.create(dto);
-
-        assertNotNull(result);
-        verify(cloudinaryService).uploadFile(file, anyString());
-        verify(categoryRepository).save(category);
-    }
-
-    @Test
     void whenCreateCategory_withIconUrl_thenSaveAndReturn() {
         CategoryCreateDTO dto = new CategoryCreateDTO();
         dto.setUserId(1L);

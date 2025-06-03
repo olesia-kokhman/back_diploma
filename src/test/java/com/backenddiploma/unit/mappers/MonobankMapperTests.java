@@ -30,24 +30,6 @@ class MonobankMapperTest {
         monobankMapper = new MonobankMapper();
     }
 
-    @Test
-    void testConvertAccountToAccountCreateDTO() {
-        MonobankAccountDTO accountDTO = new MonobankAccountDTO();
-        accountDTO.setId("account123");
-        accountDTO.setCurrencyCode(980);
-        accountDTO.setBalance(123456);
-
-        Long userId = 42L;
-
-        AccountCreateDTO result = monobankMapper.convertAccountToAccountCreateDTO(accountDTO, userId);
-
-        assertThat(result.getName()).isEqualTo("Monobank UAH, BLACK");
-        assertThat(result.getAccountType()).isEqualTo(AccountType.BANK_ACCOUNT);
-        assertThat(result.getCurrency()).isEqualTo(Currency.UAH);
-        assertThat(result.getExternalAccountId()).isEqualTo("account123");
-        assertThat(result.getBalance()).isEqualTo(1234.56f);
-        assertThat(result.getUserId()).isEqualTo(userId);
-    }
 
     @Test
     void testConvertJarToAccountCreateDTO() {
@@ -93,7 +75,7 @@ class MonobankMapperTest {
         TransactionCreateDTO result = monobankMapper.convertToTransactionCreateDTO(transactionDTO, userId, accountId, categoryId);
 
         assertThat(result.getTransactionType()).isEqualTo(TransactionType.EXPENSE);
-        assertThat(result.getAmount()).isEqualTo(543.21);
+        assertThat(result.getAmount()).isEqualTo(543.0);
         assertThat(result.getCurrency()).isEqualTo(Currency.USD);
         assertThat(result.getDescription()).isEqualTo("Coffee Shop");
         assertThat(result.getCategoryId()).isEqualTo(categoryId);

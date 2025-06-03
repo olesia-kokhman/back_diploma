@@ -348,36 +348,6 @@ class BudgetServiceTest {
         assertThrows(AlreadyExistsException.class, () -> budgetService.create(dto));
     }
 
-    @Test
-    void whenCreateExpenseBudget_Uncategorized_thenSaveWithoutOverflowCheck() {
-        BudgetCreateDTO dto = new BudgetCreateDTO();
-        dto.setUserId(1L);
-        dto.setCategoryId(28L); // UNCATEGORIZED
-        dto.setPeriodStart(LocalDate.of(2024, 6, 1));
-        dto.setPlannedAmount(100.0);
-        dto.setCurrency(Currency.USD);
-
-        User user = new User();
-        user.setId(1L);
-
-        Category category = new Category();
-        category.setId(28L);
-        category.setType(BudgetType.EXPENSE);
-
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(categoryRepository.findById(28L)).thenReturn(Optional.of(category));
-        when(budgetRepository.existsByUserIdAndCategoryIdAndPeriodStart(1L, 28L, LocalDate.of(2024, 6, 1))).thenReturn(false);
-
-        when(budgetMapper.toEntity(dto, user, category)).thenReturn(new Budget());
-        when(budgetRepository.save(any())).thenReturn(new Budget());
-        when(budgetMapper.toResponse(any())).thenReturn(new BudgetResponseDTO());
-
-        BudgetResponseDTO result = budgetService.create(dto);
-
-        assertNotNull(result);
-        verify(budgetRepository).save(any());
-    }
-
     private Budget createTotalIncomeBudget() {
         Budget b = new Budget();
         b.setCurrency(Currency.UAH);

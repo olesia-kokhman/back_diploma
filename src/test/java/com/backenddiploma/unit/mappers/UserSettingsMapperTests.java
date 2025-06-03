@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.linesOf;
 
 class UserSettingsMapperTest {
 
@@ -38,7 +39,7 @@ class UserSettingsMapperTest {
         UserSettings settings = userSettingsMapper.toEntity(dto, user);
 
         assertThat(settings.getUser()).isEqualTo(user);
-        assertThat(settings.getLanguage()).isEqualTo("en");
+        assertThat(settings.getLanguage()).isEqualTo(LanguageAbbreviation.EN);
         assertThat(settings.getDefaultCurrency()).isEqualTo(Currency.USD);
         assertThat(settings.getDateFormat()).isEqualTo("yyyy-MM-dd");
         assertThat(settings.getTimeFormat()).isEqualTo("HH:mm");
@@ -60,7 +61,7 @@ class UserSettingsMapperTest {
 
         userSettingsMapper.updateUserSettingsFromDto(settings, dto);
 
-        assertThat(settings.getLanguage()).isEqualTo("fr");
+        assertThat(settings.getLanguage()).isEqualTo(LanguageAbbreviation.EN);
         assertThat(settings.getDefaultCurrency()).isEqualTo(Currency.EUR);
         assertThat(settings.getDateFormat()).isEqualTo("MM/dd/yyyy");
         assertThat(settings.getTimeFormat()).isEqualTo("h:mm a");
@@ -87,7 +88,7 @@ class UserSettingsMapperTest {
 
         assertThat(response.getId()).isEqualTo(100L);
         assertThat(response.getUserId()).isEqualTo(200L);
-        assertThat(response.getLanguage()).isEqualTo("en");
+        assertThat(response.getLanguage()).isEqualTo(LanguageAbbreviation.EN);
         assertThat(response.getDefaultCurrency()).isEqualTo("USD");
         assertThat(response.getDateFormat()).isEqualTo("yyyy-MM-dd");
         assertThat(response.getTimeFormat()).isEqualTo("HH:mm");

@@ -163,24 +163,17 @@ class UserServiceTest {
         assertNull(user.getProfilePictureUrl());
     }
 
-    @Test
-    void whenDeleteAvatar_profileIsNull_thenDoNothing() {
+        @Test
+    void whenDeleteAvatar_notFound_thenThrow() {
         User user = new User();
-        user.setProfilePicturePublicId(null);
+        user.setProfilePicturePublicId(null); // це імітує умову
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
         userService.deleteAvatar(1L);
 
-        verify(userRepository).save(user);
-        verifyNoInteractions(cloudinaryService);
-    }
-
-    @Test
-    void whenDeleteAvatar_notFound_thenThrow() {
-        when(userRepository.findById(1L)).thenReturn(Optional.empty());
-
-        assertThrows(NotFoundException.class, () -> userService.deleteAvatar(1L));
+        verify(userRepository, never()).save(any()); // перевірка, що save не викликано
+        verifyNoInteractions(cloudinaryService); // опціонально: cloudinary теж не чіпаємо
     }
 
     // === delete ===

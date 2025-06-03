@@ -151,7 +151,6 @@ class CSVImportServiceTest {
     void whenImportCsv_emptyFile_thenThrow() {
         MultipartFile emptyFile = mock(MultipartFile.class);
         when(emptyFile.isEmpty()).thenReturn(true);
-        when(emptyFile.getOriginalFilename()).thenReturn("test.csv");
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
                 csvImportService.importCsv(emptyFile, 1L, 2L)
@@ -159,6 +158,7 @@ class CSVImportServiceTest {
 
         assertTrue(ex.getMessage().contains("Invalid file"));
     }
+
 
     @Test
     void whenImportCsv_ioError_thenThrow() throws IOException {

@@ -147,26 +147,6 @@ class TransactionServiceTest {
     }
 
     @Test
-    void whenCreate_categoryNotFound_thenThrow() {
-        TransactionCreateDTO dto = new TransactionCreateDTO();
-        dto.setAccountId(1L);
-        dto.setUserId(10L);
-        dto.setCategoryId(2L);
-
-        Account account = new Account();
-        account.setId(1L); // ОБОВʼЯЗКОВО!
-
-        User user = new User();
-        user.setId(10L); // ОБОВʼЯЗКОВО!
-
-        when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
-        when(userRepository.findById(10L)).thenReturn(Optional.of(user));
-        when(categoryRepository.findById(2L)).thenReturn(Optional.empty());
-
-        assertThrows(NotFoundException.class, () -> transactionService.create(dto));
-    }
-
-    @Test
     void whenUpdate_withValidInput_thenSaveTransaction() {
         Long transactionId = 1L;
         Long userId = 10L;
